@@ -1,0 +1,3 @@
+[submodule "hildring/externals/glfw"]
+	path = hildring/externals/glfw
+	url = https://github.com/glfw/glfw.git
