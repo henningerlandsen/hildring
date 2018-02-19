@@ -37,3 +37,6 @@ CMakeFiles/
 Makefile
 compile_commands.json
 cmake_install.cmake
+
+# Compile output
+demo/Demo
