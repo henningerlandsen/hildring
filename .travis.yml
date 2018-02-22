@@ -10,10 +10,12 @@ matrix:
       - os: osx
 addons:
     apt:
+        sources:
+          - ubuntu-toolchain-r-test
         packages:
-            - xorg-dev
-            - cmake
-            - g++-6
+          - xorg-dev
+          - cmake
+          - g++-6
 before_install:
   - if [ $TRAVIS_OS_NAME == osx ]; then brew upgrade cmake; fi
 script:
