@@ -3,7 +3,7 @@
 #include <thread>
 #include <chrono>
 
-using namespace std::chrono_literals;
+using namespace std::literals::chrono_literals;
 
 int main(int argc, char** argv) 
 {

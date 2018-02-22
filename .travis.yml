@@ -1,0 +1,23 @@
+language: cpp
+notifications:
+  email: false
+matrix:
+    include:
+      - os: linux
+        addons:
+            apt:
+              sources:
+                - ubuntu-toolchain-r-test
+              packages:
+                - xorg-dev
+                - cmake
+                - g++-6
+        env:
+          - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
+      - os: osx
+before_install:
+  - if [ $TRAVIS_OS_NAME == osx ]; then brew upgrade cmake; fi
+  - if [ $TRAVIS_OS_NAME == linux ]; then eval "${MATRIX_EVAL}"; fi
+script:
+  - cmake --version
+  - cmake . && make
