@@ -3,7 +3,13 @@ matrix:
     include:
       - os: linux
       - os: osx
-
+addons:
+    apt:
+        sources:
+            - xenial-security
+            - xenial-updates
+        packages:
+            - xorg-dev
 before_install:
   - if [ $TRAVIS_OS_NAME == linux ]; then mkdir cmake-download &&
     cd cmake-download &&
