@@ -40,3 +40,6 @@ cmake_install.cmake
 
 # Compile output
 demo/Demo
+
+# Vim swap files
+*.swp
