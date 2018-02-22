@@ -4,12 +4,16 @@ notifications:
 matrix:
     include:
       - os: linux
+        env:
+          - CXX=g++-6
+          - CC=gcc-6
       - os: osx
 addons:
     apt:
         packages:
             - xorg-dev
             - cmake
+            - g++-6
 before_install:
   - if [ $TRAVIS_OS_NAME == osx ]; then brew upgrade cmake; fi
 script:
