@@ -30,3 +30,16 @@
 *.exe
 *.out
 *.app
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+Makefile
+compile_commands.json
+cmake_install.cmake
+
+# Compile output
+demo/Demo
+
+# Vim swap files
+*.swp
