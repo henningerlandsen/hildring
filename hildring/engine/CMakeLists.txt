@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.1)
 
-project(hildring)
+project(hildring C CXX)
 
 find_package(OpenGL REQUIRED)
 
@@ -13,6 +13,8 @@ include_directories(
 set(SOURCES
     source/Window.cpp
 )
+
+add_compile_options(-std=c++14)
 
 add_library(hildring ${SOURCES})
 
