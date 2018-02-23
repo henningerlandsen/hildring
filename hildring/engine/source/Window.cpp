@@ -2,35 +2,29 @@
 
 #include "GLFW/glfw3.h"
 
-Window::Window(int width, int height, std::string title) 
+Window::Window(int width, int height, std::string title)
 {
-    if (glfwInit()) 
-    {
+    if (glfwInit()) {
         windowHandle = glfwCreateWindow(width, height, title.c_str(), NULL, NULL);
-        if (windowHandle)
-        {
+        if (windowHandle) {
             glfwMakeContextCurrent(windowHandle);
-        } 
-        else 
-        {
+        } else {
             glfwTerminate();
         }
     }
 }
 
-Window::~Window() 
+Window::~Window()
 {
     glfwTerminate();
 }
 
-
-bool Window::update() 
+bool Window::update()
 {
-    if (!glfwWindowShouldClose(windowHandle)) 
-    {
+    if (!glfwWindowShouldClose(windowHandle)) {
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
-        
+
         /* Swap front and back buffers */
         glfwSwapBuffers(windowHandle);
 
