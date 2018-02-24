@@ -1,17 +1,8 @@
-#include "Window.h"
-
-#include <chrono>
-#include <thread>
-
-using namespace std::literals::chrono_literals;
+#include "Engine.h"
 
 int main(int argc, char** argv)
 {
-    Window window(640, 480, "Hello, World!");
+    Engine eng(640, 480);
 
-    while (window.update()) {
-        std::this_thread::sleep_for(16ms);
-    }
-
-    return 0;
+    return eng.run();
 }
