@@ -2,9 +2,10 @@
 #include <chrono>
 #include <thread>
 
-Engine::Engine(int windowWidth, int windowHeight)
-    : window(windowWidth, windowHeight, "Hildring Engine")
+Engine::Engine(std::function<void()> drawFunc)
+    : window(640, 480, "Hildring Engine")
 {
+    window.setPainter(Painter(drawFunc));
 }
 
 int Engine::run()

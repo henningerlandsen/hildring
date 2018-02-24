@@ -1,10 +1,12 @@
 #pragma once
 
+#include <functional>
+
 #include "Window.h"
 
 class Engine {
 public:
-    Engine(int windowWidth, int windowHeight);
+    Engine(std::function<void()> drawFunc);
 
     int run();
 
