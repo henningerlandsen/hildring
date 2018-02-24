@@ -12,6 +12,7 @@ include_directories(
 
 set(SOURCES
     source/Engine.cpp
+    source/Painter.cpp
     source/Window.cpp
 )
 
