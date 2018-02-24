@@ -11,6 +11,7 @@ include_directories(
 )
 
 set(SOURCES
+    source/Engine.cpp
     source/Window.cpp
 )
 
