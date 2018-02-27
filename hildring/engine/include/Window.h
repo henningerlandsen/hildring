@@ -2,6 +2,8 @@
 
 #include <string>
 
+#include "Painter.h"
+
 class GLFWwindow;
 
 class Window {
@@ -11,6 +13,9 @@ public:
 
     bool update();
 
+    void setPainter(Painter p);
+
 private:
-    GLFWwindow* windowHandle;
+    GLFWwindow* m_window;
+    Painter m_painter;
 };
