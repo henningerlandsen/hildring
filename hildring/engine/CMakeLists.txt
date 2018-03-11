@@ -23,3 +23,16 @@ add_library(hildring ${SOURCES})
 target_link_libraries(hildring ${OPENGL_LIBRARIES} glfw)
 
 add_dependencies(hildring glfw)
+
+# Tests
+set(TEST_SOURCES
+    test/main.cpp
+    test/AnotherTest.cpp
+)
+
+include_directories(
+    ../externals/catch2
+)
+
+add_executable(tests ${TEST_SOURCES})
+add_test(NAME hildring-tests COMMAND tests)
