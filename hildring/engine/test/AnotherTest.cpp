@@ -2,5 +2,5 @@
 
 TEST_CASE("Test test case", "[What-is-this?]")
 {
-    REQUIRE(false);
+    REQUIRE(true);
 }
