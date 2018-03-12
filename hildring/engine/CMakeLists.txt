@@ -34,5 +34,4 @@ include_directories(
     ../externals/catch2
 )
 
-add_executable(tests ${TEST_SOURCES})
-add_test(NAME hildring-tests COMMAND tests)
+add_executable(hildring-tests ${TEST_SOURCES})
