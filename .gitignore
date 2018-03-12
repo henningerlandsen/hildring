@@ -37,11 +37,10 @@ CMakeFiles/
 Makefile
 compile_commands.json
 cmake_install.cmake
-CTestTestfile.cmake
-Testing/
 
 # Compile output
 demo/Demo
+hildring/engine/hildring-tests
 
 # Vim swap files
 *.swp
