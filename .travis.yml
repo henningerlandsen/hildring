@@ -18,7 +18,7 @@ matrix:
 before_install:
   - if [ $TRAVIS_OS_NAME == osx ]; then brew upgrade cmake; fi
   - if [ $TRAVIS_OS_NAME == linux ]; then eval "${MATRIX_EVAL}"; fi
-stage: build
-  - script: cmake . && make
-stage: test
-  - script: make test
+script: 
+  - cmake .
+  - make
+  - make test
