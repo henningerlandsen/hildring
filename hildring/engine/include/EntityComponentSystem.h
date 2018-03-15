@@ -11,24 +11,23 @@ class System {
         virtual ~ComponentWrapperBase() = default;
     };
 
-    template <class T>
+    template <class T, typename... Args>
     class ComponentWrapper : public ComponentWrapperBase {
     public:
-        ComponentWrapper(std::unique_ptr<T> component)
-            : component(std::move(component))
+        ComponentWrapper(Args... args)
+            : component(args...)
         {
         }
 
     private:
-        std::unique_ptr<T> component;
+        T component;
     };
 
 public:
     template <typename ComponentT, typename... Args>
     void addComponentHandler(Args... args)
     {
-        auto component = std::make_unique<ComponentT>(std::forward<Args>(args)...);
-        m_component = std::make_unique<ComponentWrapper<ComponentT>>(std::move(component));
+        m_component = std::make_unique<ComponentWrapper<ComponentT, Args...>>(std::forward<Args>(args)...);
     }
 
 private:
