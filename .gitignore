@@ -44,3 +44,7 @@ hildring/engine/hildring-tests
 
 # Vim swap files
 *.swp
+
+# IDE files
+.idea/
+*.cbp
