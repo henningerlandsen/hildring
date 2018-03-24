@@ -27,10 +27,12 @@ public:
     template <typename ComponentT, typename... Args>
     void addComponentHandler(Args... args)
     {
-        m_component = std::make_unique<ComponentWrapper<ComponentT, Args...>>(std::forward<Args>(args)...);
+        m_components.push_back(
+            std::make_unique<ComponentWrapper<ComponentT, Args...>>(
+                std::forward<Args>(args)...));
     }
 
 private:
-    std::unique_ptr<ComponentWrapperBase> m_component;
+    std::vector<std::unique_ptr<ComponentWrapperBase>> m_components;
 };
 }

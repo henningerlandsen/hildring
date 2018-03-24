@@ -15,11 +15,16 @@ set(SOURCES
     source/EntityComponentSystem.cpp
     source/Painter.cpp
     source/Window.cpp
+    source/ecs/Systems.cpp
+)
+
+set(HEADERS
+    include/ecs/Systems.h
 )
 
 add_compile_options(-std=c++14)
 
-add_library(hildring ${SOURCES})
+add_library(hildring ${SOURCES} ${HEADERS})
 
 target_link_libraries(hildring ${OPENGL_LIBRARIES} glfw)
 
@@ -29,7 +34,7 @@ add_dependencies(hildring glfw)
 set(TEST_SOURCES
     test/main.cpp
     test/EntityComponentSystemTest.cpp
-)
+        test/ecs/SystemsTest.cpp)
 
 include_directories(
     ../externals/catch2
