@@ -14,7 +14,7 @@ namespace ecs {
         class SystemContainer : public BaseSystemContainer {
         public:
             explicit SystemContainer(Args&&... args)
-                    : system(args...)
+                    : system(std::forward<Args>(args)...)
             {
             }
 

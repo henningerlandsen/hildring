@@ -15,16 +15,21 @@ SCENARIO("Adding Systems")
     };
     class LifetimeTracker {
     public:
-        LifetimeTracker(LifetimeStatus& _status)
+        explicit LifetimeTracker(LifetimeStatus& _status)
         : status(_status)
         {
             status.isCtorCalled = true;
         }
 
-        LifetimeTracker(const LifetimeTracker& rhs)
+        LifetimeTracker(const LifetimeTracker& rhs) noexcept
         : status(rhs.status)
         {
             status.copyCount += 1;
+        }
+
+        LifetimeTracker(LifetimeTracker&& rhs) noexcept
+        : status(rhs.status)
+        {
         }
 
         ~LifetimeTracker()
@@ -61,8 +66,8 @@ SCENARIO("Adding Systems")
     {
         class CopyControl {
         public:
-            CopyControl(LifetimeTracker _tracker)
-            : tracker(_tracker)
+            explicit CopyControl(LifetimeTracker _tracker)
+            : tracker(std::move(_tracker))
             {}
 
         private:
