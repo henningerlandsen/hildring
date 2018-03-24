@@ -12,7 +12,6 @@ include_directories(
 
 set(SOURCES
     source/Engine.cpp
-    source/EntityComponentSystem.cpp
     source/Painter.cpp
     source/Window.cpp
     source/ecs/Systems.cpp
@@ -33,8 +32,8 @@ add_dependencies(hildring glfw)
 # Tests
 set(TEST_SOURCES
     test/main.cpp
-    test/EntityComponentSystemTest.cpp
-        test/ecs/SystemsTest.cpp)
+    test/ecs/SystemsTest.cpp
+)
 
 include_directories(
     ../externals/catch2
