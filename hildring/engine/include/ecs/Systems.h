@@ -4,37 +4,36 @@
 #include <vector>
 
 namespace ecs {
-    class Systems {
-        class BaseSystemContainer {
-        public:
-            virtual ~BaseSystemContainer() = default;
-        };
-
-        template <class System, typename... Args>
-        class SystemContainer : public BaseSystemContainer {
-        public:
-            explicit SystemContainer(Args&&... args)
-                    : system(std::forward<Args>(args)...)
-            {
-            }
-
-        private:
-            System system;
-        };
-
+class Systems {
+    class BaseSystemContainer {
     public:
-        template <typename System, typename... Args>
-        static void addComponentSystem(Args&&... args)
+        virtual ~BaseSystemContainer() = default;
+    };
+
+    template <class System, typename... Args>
+    class SystemContainer : public BaseSystemContainer {
+    public:
+        explicit SystemContainer(Args&&... args)
+            : system(std::forward<Args>(args)...)
         {
-            systems.emplace_back(new SystemContainer<System, Args...>(std::forward<Args>(args)...));
         }
 
     private:
-        using SystemContainers = std::vector<std::unique_ptr<BaseSystemContainer>>;
-
-        static SystemContainers systems;
+        System system;
     };
 
-    Systems::SystemContainers Systems::systems = Systems::SystemContainers();
-}
+public:
+    template <typename System, typename... Args>
+    static void addComponentSystem(Args&&... args)
+    {
+        systems.emplace_back(new SystemContainer<System, Args...>(std::forward<Args>(args)...));
+    }
 
+private:
+    using SystemContainers = std::vector<std::unique_ptr<BaseSystemContainer>>;
+
+    static SystemContainers systems;
+};
+
+Systems::SystemContainers Systems::systems = Systems::SystemContainers();
+}

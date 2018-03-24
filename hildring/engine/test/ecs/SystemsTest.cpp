@@ -1,8 +1,7 @@
-#include <iostream>
 #include "catch.hpp"
+#include <iostream>
 
 #include "ecs/Systems.h"
-
 
 SCENARIO("Adding Systems")
 {
@@ -11,24 +10,23 @@ SCENARIO("Adding Systems")
         bool isCtorCalled = false;
         bool isDtorCalled = false;
         int copyCount = 0;
-
     };
     class LifetimeTracker {
     public:
         explicit LifetimeTracker(LifetimeStatus& _status)
-        : status(_status)
+            : status(_status)
         {
             status.isCtorCalled = true;
         }
 
         LifetimeTracker(const LifetimeTracker& rhs) noexcept
-        : status(rhs.status)
+            : status(rhs.status)
         {
             status.copyCount += 1;
         }
 
         LifetimeTracker(LifetimeTracker&& rhs) noexcept
-        : status(rhs.status)
+            : status(rhs.status)
         {
         }
 
@@ -67,8 +65,9 @@ SCENARIO("Adding Systems")
         class CopyControl {
         public:
             explicit CopyControl(LifetimeTracker _tracker)
-            : tracker(std::move(_tracker))
-            {}
+                : tracker(std::move(_tracker))
+            {
+            }
 
         private:
             LifetimeTracker tracker;
@@ -77,7 +76,8 @@ SCENARIO("Adding Systems")
         LifetimeStatus status{};
         ecs::Systems::addComponentSystem<CopyControl>(LifetimeTracker(status));
 
-        THEN("they are not copied") {
+        THEN("they are not copied")
+        {
             CHECK(status.copyCount == 0);
         }
     }
