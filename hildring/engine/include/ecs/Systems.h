@@ -5,6 +5,8 @@
 
 namespace ecs {
 class Systems {
+    using SystemId = int;
+
     class BaseSystemContainer {
     public:
         virtual ~BaseSystemContainer() = default;
@@ -16,10 +18,21 @@ class Systems {
         explicit SystemContainer(Args&&... args)
             : system(std::forward<Args>(args)...)
         {
+            //            if (id == -1) {
+            //                id = getNextId();
+            //            }
         }
+
+        System& getSystem()
+        {
+            return system;
+        }
+
+        //        static getSystemId() const { return id; }
 
     private:
         System system;
+        //        static SystemId id = -1;
     };
 
 public:
@@ -27,6 +40,12 @@ public:
     static void addComponentSystem(Args&&... args)
     {
         systems.emplace_back(new SystemContainer<System, Args...>(std::forward<Args>(args)...));
+    }
+
+    template <typename System>
+    static System& getSystem()
+    {
+        return static_cast<SystemContainer<System>*>(systems[systems.size() - 1].get())->getSystem();
     }
 
 private:

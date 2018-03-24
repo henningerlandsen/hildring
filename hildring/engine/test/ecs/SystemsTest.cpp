@@ -60,7 +60,7 @@ SCENARIO("Adding Systems")
         }
     }
 
-    WHEN("arguments are passed")
+    GIVEN("arguments are passed")
     {
         class CopyControl {
         public:
@@ -73,12 +73,44 @@ SCENARIO("Adding Systems")
             LifetimeTracker tracker;
         };
 
-        LifetimeStatus status{};
-        ecs::Systems::addComponentSystem<CopyControl>(LifetimeTracker(status));
-
-        THEN("they are not copied")
+        WHEN("a system is added")
         {
-            CHECK(status.copyCount == 0);
+            LifetimeStatus status{};
+            ecs::Systems::addComponentSystem<CopyControl>(LifetimeTracker(status));
+
+            THEN("arguments are not copied")
+            {
+                CHECK(status.copyCount == 0);
+            }
+        }
+    }
+
+    GIVEN("a system is added")
+    {
+        struct MySystem {
+            MySystem() {}
+            MySystem(int value)
+                : myValue(value)
+            {
+            }
+
+            int myValue = 0;
+        };
+
+        ecs::Systems::addComponentSystem<MySystem>(42);
+        WHEN("it is retrieved")
+        {
+            THEN("it has the initial values")
+            {
+                auto actual = ecs::Systems::getSystem<MySystem>().myValue;
+                CHECK(42 == actual);
+            }
+        }
+        WHEN("values are set")
+        {
+            THEN("they remain the same")
+            {
+            }
         }
     }
 }
