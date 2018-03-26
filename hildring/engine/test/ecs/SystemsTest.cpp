@@ -39,7 +39,7 @@ SCENARIO("Adding Systems")
         LifetimeStatus& status;
     };
 
-    WHEN("a System is added")
+    GIVEN("a System is added")
     {
         LifetimeStatus status{};
         ecs::Systems::addComponentSystem<LifetimeTracker>(status);
@@ -57,6 +57,17 @@ SCENARIO("Adding Systems")
         THEN("the System is not copied")
         {
             CHECK(status.copyCount == 0);
+        }
+
+        WHEN("the same System is added again")
+        {
+            LifetimeStatus status2{};
+            ecs::Systems::addComponentSystem<LifetimeTracker>(status2);
+
+            THEN("the System is not created")
+            {
+                CHECK(false == status2.isCtorCalled);
+            }
         }
     }
 
@@ -98,18 +109,23 @@ SCENARIO("Adding Systems")
         };
 
         ecs::Systems::addComponentSystem<MySystem>(42);
+
         WHEN("it is retrieved")
         {
+            auto actual = ecs::Systems::getSystem<MySystem>().myValue;
+
             THEN("it has the initial values")
             {
-                auto actual = ecs::Systems::getSystem<MySystem>().myValue;
                 CHECK(42 == actual);
             }
         }
+
         WHEN("values are set")
         {
+            ecs::Systems::getSystem<MySystem>().myValue = 20;
             THEN("they remain the same")
             {
+                CHECK(20 == ecs::Systems::getSystem<MySystem>().myValue);
             }
         }
     }
