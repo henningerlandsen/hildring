@@ -26,8 +26,6 @@ class Systems {
             return system;
         }
 
-        static int getSystemId() { return id; }
-
     private:
         System system;
         static int id;
@@ -37,12 +35,14 @@ class Systems {
 
 public:
     template <typename System, typename... Args>
-    static void addComponentSystem(Args&&... args)
+    static bool addComponentSystem(Args&&... args)
     {
         if (SystemContainer<System>::id == -1) {
             SystemContainer<System>::id = systems.size();
             systems.emplace_back(new SystemContainer<System>(std::forward<Args>(args)...));
+            return true;
         }
+        return false;
     }
 
     template <typename System>

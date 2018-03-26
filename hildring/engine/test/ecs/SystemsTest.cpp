@@ -42,11 +42,16 @@ SCENARIO("Adding Systems")
     GIVEN("a System is added")
     {
         LifetimeStatus status{};
-        ecs::Systems::addComponentSystem<LifetimeTracker>(status);
+        auto result = ecs::Systems::addComponentSystem<LifetimeTracker>(status);
 
         THEN("the System is created")
         {
             CHECK(status.isCtorCalled);
+        }
+
+        THEN("result is true")
+        {
+            CHECK(result == true);
         }
 
         THEN("the System persists")
@@ -62,11 +67,16 @@ SCENARIO("Adding Systems")
         WHEN("the same System is added again")
         {
             LifetimeStatus status2{};
-            ecs::Systems::addComponentSystem<LifetimeTracker>(status2);
+            auto result2 = ecs::Systems::addComponentSystem<LifetimeTracker>(status2);
 
             THEN("the System is not created")
             {
                 CHECK(false == status2.isCtorCalled);
+            }
+
+            THEN("result is false")
+            {
+                CHECK(false == result2);
             }
         }
     }
