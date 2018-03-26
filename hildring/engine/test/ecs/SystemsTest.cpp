@@ -79,6 +79,17 @@ SCENARIO("Adding Systems")
                 CHECK(false == result2);
             }
         }
+
+        WHEN("Systems are reset")
+        {
+            ecs::Systems::reset();
+
+            THEN("the System is destroyed")
+            {
+                CHECK(status.isDtorCalled);
+            }
+        }
+        ecs::Systems::reset();
     }
 
     GIVEN("arguments are passed")

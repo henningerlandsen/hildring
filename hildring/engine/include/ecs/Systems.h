@@ -6,6 +6,7 @@
 namespace ecs {
 class Systems {
     using SystemId = size_t;
+    static const SystemId InvalidId;
 
     class BaseSystemContainer {
     public:
@@ -21,6 +22,11 @@ class Systems {
         {
         }
 
+        ~SystemContainer()
+        {
+            id = InvalidId;
+        }
+
         System& getSystem()
         {
             return system;
@@ -28,7 +34,7 @@ class Systems {
 
     private:
         System system;
-        static int id;
+        static SystemId id;
 
         friend class Systems;
     };
@@ -37,7 +43,7 @@ public:
     template <typename System, typename... Args>
     static bool addComponentSystem(Args&&... args)
     {
-        if (SystemContainer<System>::id == -1) {
+        if (SystemContainer<System>::id == InvalidId) {
             SystemContainer<System>::id = systems.size();
             systems.emplace_back(new SystemContainer<System>(std::forward<Args>(args)...));
             return true;
@@ -53,6 +59,11 @@ public:
             ->getSystem();
     }
 
+    static void reset()
+    {
+        systems.clear();
+    }
+
 private:
     using SystemContainers = std::vector<std::unique_ptr<BaseSystemContainer>>;
 
@@ -60,8 +71,9 @@ private:
 };
 
 Systems::SystemContainers Systems::systems = Systems::SystemContainers();
+const Systems::SystemId Systems::InvalidId = -1;
 
 template <class System>
-int Systems::SystemContainer<System>::id = -1;
+Systems::SystemId Systems::SystemContainer<System>::id = Systems::InvalidId;
 }
 
