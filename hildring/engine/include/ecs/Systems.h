@@ -6,52 +6,25 @@
 
 namespace ecs {
 class Systems {
-    using SystemId = size_t;
-    static const SystemId InvalidId;
-
-    class BaseSystemContainer {
-    public:
-        virtual ~BaseSystemContainer() = default;
-    };
+    using SystemIndex = size_t;
+    static const SystemIndex InvalidIndex;
 
     template <class System>
-    class SystemContainer : public BaseSystemContainer {
+    class SystemMapping {
     public:
-        template <typename... Args>
-        explicit SystemContainer(SystemId _id, Args&&... args)
-            : system(std::forward<Args>(args)...)
-        {
-            assert(id == InvalidId);
-            id = _id;
-        }
-
-        ~SystemContainer()
-        {
-            id = InvalidId;
-        }
-
-        System& getSystem()
-        {
-            return system;
-        }
-
-        static SystemId getId()
-        {
-            return id;
-        }
-
-    private:
-        System system;
-        static SystemId id;
+        static SystemIndex index;
     };
 
 public:
     template <typename System, typename... Args>
     static bool addComponentSystem(Args&&... args)
     {
-        if (SystemContainer<System>::getId() == InvalidId) {
-            const auto id = createId();
-            systems.emplace_back(new SystemContainer<System>(id, std::forward<Args>(args)...));
+        if (SystemMapping<System>::index == InvalidIndex) {
+            SystemMapping<System>::index = createId();
+            systems.emplace_back(new System(std::forward<Args>(args)...), [](void* system) {
+                SystemMapping<System>::index = InvalidIndex;
+                delete static_cast<System*>(system);
+            });
             return true;
         }
         return false;
@@ -60,9 +33,9 @@ public:
     template <typename System>
     static System* getSystem()
     {
-        const auto id = SystemContainer<System>::getId();
-        if (id != InvalidId && id < systems.size()) {
-            return &static_cast<SystemContainer<System>*>(systems[id].get())->getSystem();
+        const auto index = SystemMapping<System>::index;
+        if (index != InvalidIndex && index < systems.size()) {
+            return static_cast<System*>(systems[index].get());
         }
         return nullptr;
     }
@@ -73,20 +46,20 @@ public:
     }
 
 private:
-    static SystemId createId()
+    static SystemIndex createId()
     {
-        return SystemId{ systems.size() };
+        return SystemIndex{ systems.size() };
     }
 
-    using SystemContainers = std::vector<std::unique_ptr<BaseSystemContainer>>;
+    using SystemsContainer = std::vector<std::unique_ptr<void, void (*)(void*)>>;
 
-    static SystemContainers systems;
+    static SystemsContainer systems;
 };
 
-Systems::SystemContainers Systems::systems = Systems::SystemContainers();
-const Systems::SystemId Systems::InvalidId = -1;
+Systems::SystemsContainer Systems::systems = Systems::SystemsContainer();
+const Systems::SystemIndex Systems::InvalidIndex = -1;
 
 template <class System>
-Systems::SystemId Systems::SystemContainer<System>::id = Systems::InvalidId;
+Systems::SystemIndex Systems::SystemMapping<System>::index = Systems::InvalidIndex;
 }
 
