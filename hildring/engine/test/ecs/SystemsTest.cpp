@@ -141,6 +141,20 @@ SCENARIO("Adding Systems")
             }
         }
 
+        WHEN("more systems are added")
+        {
+            struct OtherSystem {
+            };
+
+            auto expected = ecs::Systems::getSystem<MySystem>();
+            ecs::Systems::addComponentSystem<OtherSystem>();
+            THEN("earlier systems can be retrieved")
+            {
+
+                CHECK(expected == ecs::Systems::getSystem<MySystem>());
+            }
+        }
+
         WHEN("values are set")
         {
             ecs::Systems::getSystem<MySystem>()->myValue = 20;
