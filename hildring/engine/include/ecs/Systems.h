@@ -1,5 +1,6 @@
 #pragma once
 
+#include <assert.h>
 #include <memory>
 #include <vector>
 
@@ -17,9 +18,11 @@ class Systems {
     class SystemContainer : public BaseSystemContainer {
     public:
         template <typename... Args>
-        explicit SystemContainer(Args&&... args)
+        explicit SystemContainer(SystemId _id, Args&&... args)
             : system(std::forward<Args>(args)...)
         {
+            assert(id == InvalidId);
+            id = _id;
         }
 
         ~SystemContainer()
@@ -32,31 +35,36 @@ class Systems {
             return system;
         }
 
+        static SystemId getId()
+        {
+            return id;
+        }
+
     private:
         System system;
         static SystemId id;
-
-        friend class Systems;
     };
 
 public:
     template <typename System, typename... Args>
     static bool addComponentSystem(Args&&... args)
     {
-        if (SystemContainer<System>::id == InvalidId) {
-            SystemContainer<System>::id = systems.size();
-            systems.emplace_back(new SystemContainer<System>(std::forward<Args>(args)...));
+        if (SystemContainer<System>::getId() == InvalidId) {
+            const auto id = createId();
+            systems.emplace_back(new SystemContainer<System>(id, std::forward<Args>(args)...));
             return true;
         }
         return false;
     }
 
     template <typename System>
-    static System& getSystem()
+    static System* getSystem()
     {
-        return static_cast<SystemContainer<System>*>(
-            systems[systems.size() - 1].get())
-            ->getSystem();
+        const auto id = SystemContainer<System>::getId();
+        if (id != InvalidId && id < systems.size()) {
+            return &static_cast<SystemContainer<System>*>(systems[id].get())->getSystem();
+        }
+        return nullptr;
     }
 
     static void reset()
@@ -65,6 +73,11 @@ public:
     }
 
 private:
+    static SystemId createId()
+    {
+        return SystemId{ systems.size() };
+    }
+
     using SystemContainers = std::vector<std::unique_ptr<BaseSystemContainer>>;
 
     static SystemContainers systems;

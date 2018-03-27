@@ -133,7 +133,7 @@ SCENARIO("Adding Systems")
 
         WHEN("it is retrieved")
         {
-            auto actual = ecs::Systems::getSystem<MySystem>().myValue;
+            auto actual = ecs::Systems::getSystem<MySystem>()->myValue;
 
             THEN("it has the initial values")
             {
@@ -143,10 +143,10 @@ SCENARIO("Adding Systems")
 
         WHEN("values are set")
         {
-            ecs::Systems::getSystem<MySystem>().myValue = 20;
+            ecs::Systems::getSystem<MySystem>()->myValue = 20;
             THEN("they remain the same")
             {
-                CHECK(20 == ecs::Systems::getSystem<MySystem>().myValue);
+                CHECK(20 == ecs::Systems::getSystem<MySystem>()->myValue);
             }
         }
     }
