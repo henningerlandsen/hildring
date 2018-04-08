@@ -6,12 +6,24 @@ Playground for new ideas, techniques and tools in the form of an OpenGL renderni
 ## Todo
 - [x] Select a window framework (gflw)
 - [x] Setup a rendering window
-- [x] Setup travis-ci
-- [x] Setup clang-format
-- [x] Internalize main loop into engine
 - [x] Window wrapper
+- [ ] Build verification
+    - [x] Travis
+        - [x] Linux
+        - [x] Mac
+    - [ ] AppVeyor
+        - [ ] Windows
+    - [ ] Code coverage
+- [x] Setup clang-format
+- [x] Testing framework
+- [ ] Engine architechture:
+    - [ ] Entities
+    - [ ] Components
+    - [ ] Systems
+        - [x] Systems can be registered
+        - [x] Constant lookup
+        - [ ] Use lambda instead of returning pointer
+
 - [ ] GLContext wrapper
-- [ ] Engine settings
 - [ ] Capture input events
-- [ ] Have something on the screen moving
 - [ ] Add scripting framework
