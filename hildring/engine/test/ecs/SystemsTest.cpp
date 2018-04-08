@@ -131,13 +131,27 @@ SCENARIO("Adding Systems")
 
         ecs::Systems::addSystem<MySystem>(42);
 
-        WHEN("it is retrieved")
+        THEN("it can be accessed")
         {
-            auto actual = ecs::Systems::getSystem<MySystem>()->myValue;
+            CHECK(ecs::Systems::withSystem<MySystem>([](MySystem&) {}));
+        }
+
+        WHEN("it is accessed")
+        {
+            THEN("accessor is invoked")
+            {
+                auto run = false;
+                ecs::Systems::withSystem<MySystem>([&run](MySystem&) {
+                    run = true;
+                });
+                CHECK(run);
+            }
 
             THEN("it has the initial values")
             {
-                CHECK(42 == actual);
+                ecs::Systems::withSystem<MySystem>([](MySystem& system) {
+                    CHECK(42 == system.myValue);
+                });
             }
         }
 
@@ -146,21 +160,48 @@ SCENARIO("Adding Systems")
             struct OtherSystem {
             };
 
-            auto expected = ecs::Systems::getSystem<MySystem>();
             ecs::Systems::addSystem<OtherSystem>();
             THEN("earlier systems can be retrieved")
             {
-
-                CHECK(expected == ecs::Systems::getSystem<MySystem>());
+                ecs::Systems::withSystem<MySystem>([](MySystem& system) {
+                    CHECK(42 == system.myValue);
+                });
             }
         }
 
         WHEN("values are set")
         {
-            ecs::Systems::getSystem<MySystem>()->myValue = 20;
+            ecs::Systems::withSystem<MySystem>([](MySystem& system) {
+                system.myValue = 20;
+            });
+
             THEN("they remain the same")
             {
-                CHECK(20 == ecs::Systems::getSystem<MySystem>()->myValue);
+                ecs::Systems::withSystem<MySystem>([](MySystem& system) {
+                    CHECK(20 == system.myValue);
+                });
+            }
+        }
+    }
+
+    GIVEN("A system is not added")
+    {
+        struct NoSystem {
+        };
+
+        WHEN("accessed")
+        {
+            THEN("accessor check fails")
+            {
+                CHECK(false == ecs::Systems::withSystem<NoSystem>([](NoSystem&) {}));
+            }
+            THEN("accessor is not invoked")
+            {
+                auto run = false;
+                ecs::Systems::withSystem<NoSystem>([&run](NoSystem&) {
+                    run = true;
+                });
+                CHECK(run == false);
             }
         }
     }

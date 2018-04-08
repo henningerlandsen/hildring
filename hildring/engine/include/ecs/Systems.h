@@ -30,6 +30,22 @@ public:
         return false;
     }
 
+    template <typename System, typename Accessor>
+    static bool withSystem(Accessor&& accessor)
+    {
+        if (auto system = getSystem<System>()) {
+            accessor(*system);
+            return true;
+        }
+        return false;
+    }
+
+    static void reset()
+    {
+        systems.clear();
+    }
+
+private:
     template <typename System>
     static System* getSystem()
     {
@@ -40,12 +56,6 @@ public:
         return nullptr;
     }
 
-    static void reset()
-    {
-        systems.clear();
-    }
-
-private:
     static SystemIndex createId()
     {
         return SystemIndex{ systems.size() };
