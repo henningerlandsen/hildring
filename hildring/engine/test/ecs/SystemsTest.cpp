@@ -42,7 +42,7 @@ SCENARIO("Adding Systems")
     GIVEN("a System is added")
     {
         LifetimeStatus status{};
-        auto result = ecs::Systems::addComponentSystem<LifetimeTracker>(status);
+        auto result = ecs::Systems::addSystem<LifetimeTracker>(status);
 
         THEN("the System is created")
         {
@@ -67,7 +67,7 @@ SCENARIO("Adding Systems")
         WHEN("the same System is added again")
         {
             LifetimeStatus status2{};
-            auto result2 = ecs::Systems::addComponentSystem<LifetimeTracker>(status2);
+            auto result2 = ecs::Systems::addSystem<LifetimeTracker>(status2);
 
             THEN("the System is not created")
             {
@@ -108,7 +108,7 @@ SCENARIO("Adding Systems")
         WHEN("a system is added")
         {
             LifetimeStatus status{};
-            ecs::Systems::addComponentSystem<CopyControl>(LifetimeTracker(status));
+            ecs::Systems::addSystem<CopyControl>(LifetimeTracker(status));
 
             THEN("arguments are not copied")
             {
@@ -129,7 +129,7 @@ SCENARIO("Adding Systems")
             int myValue = 0;
         };
 
-        ecs::Systems::addComponentSystem<MySystem>(42);
+        ecs::Systems::addSystem<MySystem>(42);
 
         WHEN("it is retrieved")
         {
@@ -147,7 +147,7 @@ SCENARIO("Adding Systems")
             };
 
             auto expected = ecs::Systems::getSystem<MySystem>();
-            ecs::Systems::addComponentSystem<OtherSystem>();
+            ecs::Systems::addSystem<OtherSystem>();
             THEN("earlier systems can be retrieved")
             {
 

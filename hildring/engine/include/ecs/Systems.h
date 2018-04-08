@@ -17,7 +17,7 @@ class Systems {
 
 public:
     template <typename System, typename... Args>
-    static bool addComponentSystem(Args&&... args)
+    static bool addSystem(Args&&... args)
     {
         if (SystemMapping<System>::index == InvalidIndex) {
             SystemMapping<System>::index = createId();
