@@ -1,0 +1,16 @@
+version: '{build}'
+branches:
+  only:
+  - master
+image:
+- Visual Studio 2017
+platform:
+- x64
+install:
+- git submodule update --init --recursive
+before_build:
+- cmake .
+build_script:
+- cmake --build .
+test_script:
+- hildring\engine\Debug\hildring-tests.exe
