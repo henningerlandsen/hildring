@@ -22,7 +22,7 @@ Playground for new ideas, techniques and tools in the form of an OpenGL renderni
     - [ ] Systems
         - [x] Systems can be registered
         - [x] Constant lookup
-        - [ ] Use lambda instead of returning pointer
+        - [x] Use lambda instead of returning pointer
 
 - [ ] GLContext wrapper
 - [ ] Capture input events
