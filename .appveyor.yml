@@ -10,9 +10,8 @@ install:
 - git submodule update --init --recursive
 before_build:
 - cmake .
-- mkdir "build"
 build_script:
-- cmake --build "build"
+- cmake --build .
 test_script:
 - cd build
 - dir
