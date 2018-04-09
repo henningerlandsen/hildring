@@ -17,7 +17,7 @@ class Systems {
 
 public:
     template <typename System, typename... Args>
-    static bool addSystem(Args&&... args)
+    static bool create(Args&&... args)
     {
         if (SystemMapping<System>::index == InvalidIndex) {
             SystemMapping<System>::index = createId();
@@ -31,7 +31,7 @@ public:
     }
 
     template <typename System, typename Accessor>
-    static bool withSystem(Accessor&& accessor)
+    static bool with(Accessor&& accessor)
     {
         if (auto system = getSystem<System>()) {
             accessor(*system);

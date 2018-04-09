@@ -42,7 +42,7 @@ SCENARIO("Adding Systems")
     GIVEN("a System is added")
     {
         LifetimeStatus status{};
-        auto result = ecs::Systems::addSystem<LifetimeTracker>(status);
+        auto result = ecs::Systems::create<LifetimeTracker>(status);
 
         THEN("the System is created")
         {
@@ -67,7 +67,7 @@ SCENARIO("Adding Systems")
         WHEN("the same System is added again")
         {
             LifetimeStatus status2{};
-            auto result2 = ecs::Systems::addSystem<LifetimeTracker>(status2);
+            auto result2 = ecs::Systems::create<LifetimeTracker>(status2);
 
             THEN("the System is not created")
             {
@@ -108,7 +108,7 @@ SCENARIO("Adding Systems")
         WHEN("a system is added")
         {
             LifetimeStatus status{};
-            ecs::Systems::addSystem<CopyControl>(LifetimeTracker(status));
+            ecs::Systems::create<CopyControl>(LifetimeTracker(status));
 
             THEN("arguments are not copied")
             {
@@ -129,11 +129,11 @@ SCENARIO("Adding Systems")
             int myValue = 0;
         };
 
-        ecs::Systems::addSystem<MySystem>(42);
+        ecs::Systems::create<MySystem>(42);
 
         THEN("it can be accessed")
         {
-            CHECK(ecs::Systems::withSystem<MySystem>([](MySystem&) {}));
+            CHECK(ecs::Systems::with<MySystem>([](MySystem&) {}));
         }
 
         WHEN("it is accessed")
@@ -141,7 +141,7 @@ SCENARIO("Adding Systems")
             THEN("accessor is invoked")
             {
                 auto run = false;
-                ecs::Systems::withSystem<MySystem>([&run](MySystem&) {
+                ecs::Systems::with<MySystem>([&run](MySystem&) {
                     run = true;
                 });
                 CHECK(run);
@@ -149,7 +149,7 @@ SCENARIO("Adding Systems")
 
             THEN("it has the initial values")
             {
-                ecs::Systems::withSystem<MySystem>([](MySystem& system) {
+                ecs::Systems::with<MySystem>([](MySystem& system) {
                     CHECK(42 == system.myValue);
                 });
             }
@@ -160,10 +160,10 @@ SCENARIO("Adding Systems")
             struct OtherSystem {
             };
 
-            ecs::Systems::addSystem<OtherSystem>();
+            ecs::Systems::create<OtherSystem>();
             THEN("earlier systems can be retrieved")
             {
-                ecs::Systems::withSystem<MySystem>([](MySystem& system) {
+                ecs::Systems::with<MySystem>([](MySystem& system) {
                     CHECK(42 == system.myValue);
                 });
             }
@@ -171,13 +171,13 @@ SCENARIO("Adding Systems")
 
         WHEN("values are set")
         {
-            ecs::Systems::withSystem<MySystem>([](MySystem& system) {
+            ecs::Systems::with<MySystem>([](MySystem& system) {
                 system.myValue = 20;
             });
 
             THEN("they remain the same")
             {
-                ecs::Systems::withSystem<MySystem>([](MySystem& system) {
+                ecs::Systems::with<MySystem>([](MySystem& system) {
                     CHECK(20 == system.myValue);
                 });
             }
@@ -193,12 +193,13 @@ SCENARIO("Adding Systems")
         {
             THEN("accessor check fails")
             {
-                CHECK(false == ecs::Systems::withSystem<NoSystem>([](NoSystem&) {}));
+                CHECK(false == ecs::Systems::with<NoSystem>([](NoSystem&) {}));
             }
+
             THEN("accessor is not invoked")
             {
                 auto run = false;
-                ecs::Systems::withSystem<NoSystem>([&run](NoSystem&) {
+                ecs::Systems::with<NoSystem>([&run](NoSystem&) {
                     run = true;
                 });
                 CHECK(run == false);
