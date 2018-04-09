@@ -1,0 +1,15 @@
+version: '{build}'
+branches:
+  only:
+  - master
+image:
+- Visual Studio 2017
+platform:
+- x64
+before_build:
+- cmake .
+build_script:
+- cmake --build "build"
+test_script:
+- cd build
+- dir
