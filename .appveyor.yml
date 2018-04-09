@@ -13,5 +13,4 @@ before_build:
 build_script:
 - cmake --build .
 test_script:
-- cd build
-- dir
+- hildring\engine\Debug\hildring-tests.exe
