@@ -37,6 +37,7 @@ add_dependencies(hildring glfw)
 set(TEST_SOURCES
     test/main.cpp
     test/ecs/SystemsTest.cpp
+    test/util/IndexTest.cpp
 )
 
 include_directories(
