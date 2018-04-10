@@ -21,7 +21,11 @@ set(HEADERS
     include/ecs/Systems.h
 )
 
-add_compile_options(-std=c++14 -Wall -Wextra -Werror)
+if (MSVC)
+    add_compile_options(/W4)
+else()
+    add_compile_options(-std=c++14 -Wall -Wextra -Werror)
+endif()
 
 add_library(hildring ${SOURCES} ${HEADERS})
 
