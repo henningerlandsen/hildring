@@ -71,15 +71,34 @@ SCENARIO("Valid Index")
 
 SCENARIO("It works with any type")
 {
-    auto index = util::Index<bool, false>{};
+    GIVEN("a bool type")
+    {
+        auto index = util::Index<bool, false>{};
 
-    CHECK(!index.valid());
+        THEN("default is invalid")
+        {
+            CHECK(!index.valid());
+        }
 
-    index = true;
+        WHEN("updating value")
+        {
+            index = true;
 
-    CHECK(index.valid());
+            THEN("index is valid")
+            {
+                CHECK(index.valid());
+            }
+        }
 
-    index.invalidate();
+        WHEN("invlidating")
+        {
+            index.invalidate();
 
-    CHECK(!index.valid());
+            THEN("index is invalid")
+            {
+
+                CHECK(!index.valid());
+            }
+        }
+    }
 }
