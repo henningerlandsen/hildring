@@ -1,13 +1,14 @@
 #pragma once
 
+#include "util/Index.h"
+
 #include <assert.h>
 #include <memory>
 #include <vector>
 
 namespace ecs {
 class Systems {
-    using SystemIndex = size_t;
-    static const SystemIndex InvalidIndex;
+    using SystemIndex = util::Index<unsigned long, ~0ul>;
 
     template <class System>
     class SystemMapping {
@@ -19,10 +20,10 @@ public:
     template <typename System, typename... Args>
     static bool create(Args&&... args)
     {
-        if (SystemMapping<System>::index == InvalidIndex) {
+        if (!SystemMapping<System>::index.valid()) {
             SystemMapping<System>::index = createId();
             systems.emplace_back(new System(std::forward<Args>(args)...), [](void* system) {
-                SystemMapping<System>::index = InvalidIndex;
+                SystemMapping<System>::index.invalidate();
                 delete static_cast<System*>(system);
             });
             return true;
@@ -50,7 +51,7 @@ private:
     static System* getSystem()
     {
         const auto index = SystemMapping<System>::index;
-        if (index != InvalidIndex && index < systems.size()) {
+        if (index.valid() && index < systems.size()) {
             return static_cast<System*>(systems[index].get());
         }
         return nullptr;
@@ -67,9 +68,8 @@ private:
 };
 
 Systems::SystemsContainer Systems::systems = Systems::SystemsContainer();
-const Systems::SystemIndex Systems::InvalidIndex = -1;
 
 template <class System>
-Systems::SystemIndex Systems::SystemMapping<System>::index = Systems::InvalidIndex;
+Systems::SystemIndex Systems::SystemMapping<System>::index = Systems::SystemIndex();
 }
 

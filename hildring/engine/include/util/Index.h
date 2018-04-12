@@ -10,7 +10,7 @@ public:
     {
     }
 
-    bool valid() { return value != InvalidValue; }
+    bool valid() const { return value != InvalidValue; }
 
     Index& operator=(DataType _value)
     {
