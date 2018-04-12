@@ -14,11 +14,6 @@ set(SOURCES
     source/Engine.cpp
     source/Painter.cpp
     source/Window.cpp
-    source/ecs/Systems.cpp
-)
-
-set(HEADERS
-    include/ecs/Systems.h
 )
 
 if (MSVC)
@@ -27,7 +22,7 @@ else()
     add_compile_options(-std=c++14 -Wall -Wextra -Werror)
 endif()
 
-add_library(hildring ${SOURCES} ${HEADERS})
+add_library(hildring ${SOURCES}) 
 
 target_link_libraries(hildring ${OPENGL_LIBRARIES} glfw)
 
@@ -40,8 +35,8 @@ set(TEST_SOURCES
     test/util/IndexTest.cpp
 )
 
-include_directories(
-    ../externals/catch2
-)
-
 add_executable(hildring-tests ${TEST_SOURCES})
+
+target_include_directories(hildring-tests PRIVATE ../externals/catch2)
+
+
