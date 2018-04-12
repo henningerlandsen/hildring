@@ -2,7 +2,7 @@
 
 namespace util {
 
-template <typename DataType = int, DataType InvalidValue = -1>
+template <typename DataType, DataType InvalidValue>
 class Index {
 public:
     Index(DataType _value = InvalidValue)
