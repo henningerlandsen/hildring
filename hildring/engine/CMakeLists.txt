@@ -16,9 +16,13 @@ set(SOURCES
     source/Window.cpp
 )
 
-add_compile_options(-std=c++14)
+if (MSVC)
+    add_compile_options(/W4 /WX)
+else()
+    add_compile_options(-std=c++14 -Wall -Wextra -Werror)
+endif()
 
-add_library(hildring ${SOURCES})
+add_library(hildring ${SOURCES}) 
 
 target_link_libraries(hildring ${OPENGL_LIBRARIES} glfw)
 
@@ -27,11 +31,12 @@ add_dependencies(hildring glfw)
 # Tests
 set(TEST_SOURCES
     test/main.cpp
-    test/AnotherTest.cpp
-)
-
-include_directories(
-    ../externals/catch2
+    test/ecs/SystemsTest.cpp
+    test/util/IndexTest.cpp
 )
 
 add_executable(hildring-tests ${TEST_SOURCES})
+
+target_include_directories(hildring-tests PRIVATE ../externals/catch2)
+
+
