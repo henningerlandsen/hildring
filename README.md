@@ -11,8 +11,8 @@ Playground for new ideas, techniques and tools in the form of an OpenGL renderni
     - [x] Travis
         - [x] Linux
         - [x] Mac
-    - [ ] AppVeyor
-        - [ ] Windows
+    - [x] AppVeyor
+        - [x] Windows
     - [ ] Code coverage
 - [x] Setup clang-format
 - [x] Testing framework
