@@ -1,13 +1,7 @@
 #include "catch.hpp"
 
 #include "util/Index.h"
-/*
- * Given a default initialized index
- *  - Then it is not valid
- *  
- *  - When assigning a value
- *  - Then it is valid
- * */
+
 SCENARIO("Invalid index")
 {
     GIVEN("A default initialized Index")
@@ -87,17 +81,6 @@ SCENARIO("It works with any type")
             THEN("index is valid")
             {
                 CHECK(index.valid());
-            }
-        }
-
-        WHEN("invlidating")
-        {
-            index.invalidate();
-
-            THEN("index is invalid")
-            {
-
-                CHECK(!index.valid());
             }
         }
     }
