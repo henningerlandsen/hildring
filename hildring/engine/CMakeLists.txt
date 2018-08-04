@@ -38,14 +38,17 @@ set(TEST_SOURCES
 )
 
 set(TEST_EXECUTABLE ${PROJECT_NAME}-tests)
-if(CMAKE_COMPILER_IS_GNUCXX)
-    include(CodeCoverage)
-    setup_target_for_coverage(${PROJECT_NAME}-coverage ${TEST_EXECUTABLE} coverage)
-endif()
-
 
 add_executable(${TEST_EXECUTABLE} ${TEST_SOURCES})
 
 target_include_directories(${TEST_EXECUTABLE} PRIVATE ../externals/catch2)
+
+# Coverage
+set(ENABLE_COVERAGE false CACHE BOOL "Enable code coverage target")
+
+if(CMAKE_COMPILER_IS_GNUCXX AND ENABLE_COVERAGE)
+    include(CodeCoverage)
+    setup_target_for_coverage(${PROJECT_NAME}-coverage ${TEST_EXECUTABLE} coverage)
+endif()
 
 
