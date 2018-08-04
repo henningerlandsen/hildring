@@ -12,6 +12,7 @@ matrix:
                 - xorg-dev
                 - cmake
                 - g++-6
+                - lcov
         env:
           - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
       - os: osx
@@ -22,6 +23,9 @@ script:
   - cmake .
   - make
   - make tests
+  - cmake . -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=True
+  - make
+  - make hildring-coverage
 after_success:
   - cd ${TRAVIS_BUILD_DIR}
   - lcov --directory . --capture --output-file coverage.info
