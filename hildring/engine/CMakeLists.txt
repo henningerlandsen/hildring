@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.1)
 
 project(hildring C CXX)
 
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/CMakeModules)
+
 find_package(OpenGL REQUIRED)
 
 include_directories(
@@ -22,11 +24,11 @@ else()
     add_compile_options(-std=c++14 -Wall -Wextra -Werror)
 endif()
 
-add_library(hildring ${SOURCES}) 
+add_library(${PROJECT_NAME} ${SOURCES}) 
 
-target_link_libraries(hildring ${OPENGL_LIBRARIES} glfw)
+target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} glfw)
 
-add_dependencies(hildring glfw)
+add_dependencies(${PROJECT_NAME} glfw)
 
 # Tests
 set(TEST_SOURCES
@@ -35,8 +37,15 @@ set(TEST_SOURCES
     test/util/IndexTest.cpp
 )
 
-add_executable(hildring-tests ${TEST_SOURCES})
+set(TEST_EXECUTABLE ${PROJECT_NAME}-tests)
+if(CMAKE_COMPILER_IS_GNUCXX)
+    include(CodeCoverage)
+    setup_target_for_coverage(${PROJECT_NAME}-coverage ${TEST_EXECUTABLE} coverage)
+endif()
 
-target_include_directories(hildring-tests PRIVATE ../externals/catch2)
+
+add_executable(${TEST_EXECUTABLE} ${TEST_SOURCES})
+
+target_include_directories(${TEST_EXECUTABLE} PRIVATE ../externals/catch2)
 
 
