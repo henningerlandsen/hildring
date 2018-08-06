@@ -46,10 +46,10 @@ target_include_directories(${TEST_EXECUTABLE} PRIVATE ../externals/catch2)
 # Coverage
 set(ENABLE_COVERAGE false CACHE BOOL "Enable code coverage target")
 
-if(CMAKE_COMPILER_IS_GNUCXX AND ENABLE_COVERAGE)
+if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND CMAKE_COMPILER_IS_GNUCXX AND ENABLE_COVERAGE)
     include(CodeCoverage)
-    SET(CMAKE_CXX_FLAGS "-g -O0 -fprofile-arcs -ftest-coverage")
-    SET(CMAKE_C_FLAGS "-g -O0 -fprofile-arcs -ftest-coverage")
+    add_compile_options(-g -O0 -fprofile-arcs -ftest-coverage)
+    target_link_libraries(${PROJECT_NAME} debug -lgcov)
     setup_target_for_coverage(${PROJECT_NAME}-coverage ${TEST_EXECUTABLE} coverage)
 endif()
 
