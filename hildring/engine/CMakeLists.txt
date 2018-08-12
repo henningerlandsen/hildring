@@ -22,6 +22,13 @@ if (MSVC)
     add_compile_options(/W4 /WX)
 else()
     add_compile_options(-std=c++14 -Wall -Wextra -Werror)
+
+    # Coverage
+    set(ENABLE_COVERAGE false CACHE BOOL "Enable code coverage target")
+
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND ENABLE_COVERAGE)
+        add_compile_options(-g -O0 -fprofile-arcs -ftest-coverage)
+   endif()
 endif()
 
 add_library(${PROJECT_NAME} ${SOURCES}) 
@@ -43,14 +50,9 @@ add_executable(${TEST_EXECUTABLE} ${TEST_SOURCES})
 
 target_include_directories(${TEST_EXECUTABLE} PRIVATE ../externals/catch2)
 
-# Coverage
-set(ENABLE_COVERAGE false CACHE BOOL "Enable code coverage target")
-
 if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND ENABLE_COVERAGE)
-    include(CodeCoverage)
-    add_compile_options(-g -O0 -fprofile-arcs -ftest-coverage)
     target_link_libraries(${PROJECT_NAME} debug -lgcov)
-    setup_target_for_coverage(${PROJECT_NAME}-coverage ${TEST_EXECUTABLE} coverage)
+    target_link_libraries(${TEST_EXECUTABLE} debug -lgcov)
+    include(CodeCoverage)
+    setup_target_for_coverage(${PROJECT_NAME}-coverage ${TEST_EXECUTABLE} coverage) 
 endif()
-
-
