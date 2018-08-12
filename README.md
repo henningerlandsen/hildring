@@ -14,6 +14,11 @@ Playground for new ideas, techniques and tools in the form of an OpenGL renderni
     - [x] AppVeyor
         - [x] Windows
     - [ ] Code coverage
+        - [x] Setup codecov.io
+        - [x] Generate coverage report
+            - [x] Linux
+        - [ ] Disable for other platforms?
+        - [ ] Exclude externals dir
 - [x] Setup clang-format
 - [x] Testing framework
 - [ ] Engine architechture:
