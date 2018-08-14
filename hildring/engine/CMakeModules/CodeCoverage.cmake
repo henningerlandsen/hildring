@@ -142,7 +142,7 @@ FUNCTION(SETUP_TARGET_FOR_COVERAGE _targetname _testrunner _outputname _excludep
 		${LCOV_PATH} --directory . --zerocounters
 
 		# Run tests
-		COMMAND ${test_command} ${ARGV3}
+		COMMAND ${test_command}
 
 		# Capturing lcov counters and generating report
 		COMMAND ${LCOV_PATH} --directory . --capture --output-file ${coverage_info}
