@@ -10,7 +10,7 @@ Playground for new ideas, techniques and tools in the form of an OpenGL renderni
 - [x] Select a window framework (gflw)
 - [x] Setup a rendering window
 - [x] Window wrapper
-- [ ] Build verification
+- [x] Build verification
     - [x] Travis
         - [x] Linux
         - [x] Mac
@@ -28,6 +28,7 @@ Playground for new ideas, techniques and tools in the form of an OpenGL renderni
 - [ ] Engine architechture:
     - [ ] Entities
     - [ ] Components
+        - [ ] Components belong to one system
     - [ ] Systems
         - [x] Systems can be registered
         - [x] Constant lookup
