@@ -16,7 +16,9 @@ def FlagsForFile( filename, **kwargs ):
         filename = MatchingSourceFile(filename)
     compilation_info = database.GetCompilationInfoForFile( filename )
     if not compilation_info:
-        return None
+        return {
+                'flags': ['-Wall', '-Wextra', '-Werror', '-std=c++14']
+        }
     return {
             'flags': list(compilation_info.compiler_flags_),
         'include_paths_relative_to_dir': compilation_info.compiler_working_dir_
