@@ -1,12 +1,13 @@
 #include "catch.hpp"
 
+#include "ecs/Components.h"
 #include "ecs/Systems.h"
 
 #include <string>
 
 SCENARIO("Registering components")
 {
-    GIVEN("A System is registered")
+    GIVEN("a System is registered")
     {
         struct Component {
             std::string name;
@@ -18,10 +19,13 @@ SCENARIO("Registering components")
 
         ecs::Systems::create<System>();
 
-        WHEN("Registering a Component")
+        WHEN("registering a Component")
         {
-            //            ecs::Systems::registerComponent<System, Component>();
-            CHECK(false);
+            auto result = ecs::Components::add<System, Component>();
+            THEN("result is true")
+            {
+                CHECK(result);
+            }
         }
     }
 }
