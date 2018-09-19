@@ -27,6 +27,15 @@ SCENARIO("Registering components")
                 CHECK(result);
             }
         }
+
+        WHEN("component is already registered")
+        {
+            auto result = ecs::Components::add<System, Component>();
+            THEN("result is false")
+            {
+                CHECK(result == false);
+            }
+        }
     }
 }
 
