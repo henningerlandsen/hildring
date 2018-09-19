@@ -21,7 +21,7 @@ SCENARIO("Registering components")
 
         WHEN("registering a Component")
         {
-            auto result = ecs::Components::add<System, Component>();
+            auto result = ecs::Components<Component>::link<System>();
             THEN("result is true")
             {
                 CHECK(result);
@@ -30,7 +30,7 @@ SCENARIO("Registering components")
 
         WHEN("component is already registered")
         {
-            auto result = ecs::Components::add<System, Component>();
+            auto result = ecs::Components<Component>::link<System>();
             THEN("result is false")
             {
                 CHECK(result == false);

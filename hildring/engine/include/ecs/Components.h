@@ -1,26 +1,23 @@
 #pragma once
 
 namespace ecs {
+template <typename Component>
 class Components {
-
-    template <class Component>
-    class ComponentProxy {
-    public:
-        static bool exists;
-    };
-
 public:
-    template <typename System, typename Component>
-    static bool add()
+    template <typename System>
+    static bool link()
     {
-        if (!ComponentProxy<Component>::exists) {
-            ComponentProxy<Component>::exists = true;
+        if (!exists) {
+            exists = true;
             return true;
         }
         return false;
     }
+
+private:
+    static bool exists;
 };
 
 template <class Component>
-bool Components::ComponentProxy<Component>::exists = false;
+bool Components<Component>::exists = false;
 }
