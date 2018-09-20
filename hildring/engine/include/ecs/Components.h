@@ -1,5 +1,7 @@
 #pragma once
 
+#include "ecs/Systems.h"
+
 namespace ecs {
 template <typename Component>
 class Components {
@@ -8,8 +10,8 @@ public:
     static bool link()
     {
         if (!exists) {
-            exists = true;
-            return true;
+            exists = ecs::Systems::with<System>([](System&) {});
+            return exists;
         }
         return false;
     }

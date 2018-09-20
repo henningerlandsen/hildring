@@ -7,31 +7,43 @@
 
 SCENARIO("Registering components")
 {
-    GIVEN("a System is registered")
+    struct Component {
+        std::string name;
+    };
+
+    struct System {
+        System() {}
+    };
+
+    GIVEN("System is not created")
     {
-        struct Component {
-            std::string name;
-        };
+        WHEN("linking Component")
+        {
+            const auto result = ecs::Components<Component>::link<System>();
+            THEN("linking fails")
+            {
+                CHECK(result == false);
+            }
+        }
+    }
 
-        struct System {
-            System() {}
-        };
-
+    GIVEN("System is created")
+    {
         ecs::Systems::create<System>();
 
-        WHEN("registering a Component")
+        WHEN("linking a Component")
         {
-            auto result = ecs::Components<Component>::link<System>();
-            THEN("result is true")
+            const auto result = ecs::Components<Component>::link<System>();
+            THEN("linking succeeds")
             {
                 CHECK(result);
             }
         }
 
-        WHEN("component is already registered")
+        WHEN("component is already linked")
         {
-            auto result = ecs::Components<Component>::link<System>();
-            THEN("result is false")
+            const auto result = ecs::Components<Component>::link<System>();
+            THEN("linking fails")
             {
                 CHECK(result == false);
             }
