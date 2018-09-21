@@ -2,6 +2,8 @@
 
 #include "ecs/Systems.h"
 
+#include <functional>
+
 namespace ecs {
 template <typename Component>
 class Components {
