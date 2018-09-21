@@ -27,8 +27,16 @@ Playground for new ideas, techniques and tools in the form of an OpenGL renderni
 - [x] Testing framework
 - [ ] Engine architechture:
     - [ ] Entities
+        - [ ] can be created
+        - [ ] can be destroyed
+            - [ ] attached Components are also destroyed
+        - [ ] can have Components
     - [ ] Components
-        - [ ] Components belong to one system
+        - [x] belong to one system
+        - [ ] can be created 
+        - [ ] can be modified
+        - [ ] can be destroyed
+        - [ ] are tied to an EntityId
     - [ ] Systems
         - [x] Systems can be registered
         - [x] Constant lookup
