@@ -10,9 +10,8 @@ public:
     static bool link()
     {
         if (!exists) {
-            auto& createFn2 = createFn;
-            exists = ecs::Systems::with<System>([&createFn2](System& system) {
-                createFn2 = [&system](Component*& component) {
+            exists = ecs::Systems::with<System>([](System& system) {
+                createFn = [&system](Component*& component) {
                     return system.create(component);
                 };
             });
