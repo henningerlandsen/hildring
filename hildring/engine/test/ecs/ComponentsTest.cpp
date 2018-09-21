@@ -13,6 +13,16 @@ SCENARIO("Registering components")
 
     struct System {
         System() {}
+
+        bool create(Component*& c)
+        {
+            createCalled = true;
+            c = &component;
+            return true;
+        }
+
+        bool createCalled = false;
+        Component component;
     };
 
     GIVEN("System is not created")
@@ -37,6 +47,32 @@ SCENARIO("Registering components")
             THEN("linking succeeds")
             {
                 CHECK(result);
+            }
+        }
+
+        WHEN("creating Component")
+        {
+            bool didRunInit = false;
+            const auto didCreate = ecs::Components<Component>::create(
+                [&didRunInit](Component&) {
+                    didRunInit = true;
+                });
+
+            THEN("System creates it")
+            {
+                ecs::Systems::with<System>([](System& system) {
+                    CHECK(system.createCalled);
+                });
+            }
+
+            THEN("init method is called")
+            {
+                CHECK(didRunInit);
+            }
+
+            THEN("Component exists")
+            {
+                CHECK(didCreate);
             }
         }
 
