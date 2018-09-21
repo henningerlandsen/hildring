@@ -32,6 +32,11 @@ public:
         return false;
     }
 
+    static bool create()
+    {
+        return create([](Component&) {});
+    }
+
 private:
     static bool exists;
     static std::function<bool(Component*&)> createFn;

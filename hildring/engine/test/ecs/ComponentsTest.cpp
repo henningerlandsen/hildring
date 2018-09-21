@@ -85,5 +85,27 @@ SCENARIO("Registering components")
             }
         }
     }
+
+    GIVEN("System cannot allocate")
+    {
+        struct BadAllocSystem {
+            bool create(int*&)
+            {
+                return false;
+            }
+        };
+
+        ecs::Systems::create<BadAllocSystem>();
+        ecs::Components<int>::link<BadAllocSystem>();
+
+        WHEN("creating component")
+        {
+            const auto result = ecs::Components<int>::create();
+            THEN("create fails")
+            {
+                CHECK(result == false);
+            }
+        }
+    }
 }
 
