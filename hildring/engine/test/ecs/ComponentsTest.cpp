@@ -30,9 +30,29 @@ SCENARIO("Registering components")
         WHEN("linking Component")
         {
             const auto result = ecs::Components<Component>::link<System>();
-            THEN("linking fails")
+            THEN("linking succeeds")
             {
-                CHECK(result == false);
+                CHECK(result);
+            }
+
+            WHEN("creating Component")
+            {
+                const auto result = ecs::Components<Component>::create();
+                THEN("create fails")
+                {
+                    CHECK(result == false);
+                }
+            }
+
+            WHEN("System is created")
+            {
+                ecs::Systems::create<System>();
+
+                THEN("Component can be created")
+                {
+                    const auto result = ecs::Components<Component>::create();
+                    CHECK(result);
+                }
             }
         }
     }
@@ -48,40 +68,40 @@ SCENARIO("Registering components")
             {
                 CHECK(result);
             }
-        }
 
-        WHEN("creating Component")
-        {
-            bool didRunInit = false;
-            const auto didCreate = ecs::Components<Component>::create(
-                [&didRunInit](Component&) {
-                    didRunInit = true;
-                });
-
-            THEN("System creates it")
+            WHEN("creating Component")
             {
-                ecs::Systems::with<System>([](System& system) {
-                    CHECK(system.createCalled);
-                });
+                bool didRunInit = false;
+                const auto didCreate = ecs::Components<Component>::create(
+                    [&didRunInit](Component&) {
+                        didRunInit = true;
+                    });
+
+                THEN("System creates it")
+                {
+                    ecs::Systems::with<System>([](System& system) {
+                        CHECK(system.createCalled);
+                    });
+                }
+
+                THEN("init method is called")
+                {
+                    CHECK(didRunInit);
+                }
+
+                THEN("Component exists")
+                {
+                    CHECK(didCreate);
+                }
             }
 
-            THEN("init method is called")
+            WHEN("component is already linked")
             {
-                CHECK(didRunInit);
-            }
-
-            THEN("Component exists")
-            {
-                CHECK(didCreate);
-            }
-        }
-
-        WHEN("component is already linked")
-        {
-            const auto result = ecs::Components<Component>::link<System>();
-            THEN("linking fails")
-            {
-                CHECK(result == false);
+                const auto result = ecs::Components<Component>::link<System>();
+                THEN("linking fails")
+                {
+                    CHECK(result == false);
+                }
             }
         }
     }
@@ -96,7 +116,7 @@ SCENARIO("Registering components")
         };
 
         ecs::Systems::create<BadAllocSystem>();
-        ecs::Components<int>::link<BadAllocSystem>();
+        const auto linkResult = ecs::Components<int>::link<BadAllocSystem>();
 
         WHEN("creating component")
         {

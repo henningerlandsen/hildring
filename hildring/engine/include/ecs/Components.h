@@ -8,18 +8,41 @@ namespace ecs {
 template <typename Component>
 class Components {
 public:
+    class LinkLifetime {
+    public:
+        LinkLifetime(bool validLink)
+            : valid(validLink)
+        {
+        }
+
+        ~LinkLifetime()
+        {
+            if (valid) {
+                Components<Component>::unlink();
+            }
+        }
+
+        operator bool() const { return valid; }
+
+    private:
+        bool valid{ false };
+    };
+
     template <typename System>
-    static bool link()
+    static LinkLifetime link()
     {
         if (!exists) {
-            exists = ecs::Systems::with<System>([](System& system) {
-                createFn = [&system](Component*& component) {
-                    return system.create(component);
-                };
-            });
-            return exists;
+            exists = true;
+            createFn = [](Component*& component) {
+                bool created = false;
+                ecs::Systems::with<System>([&created, &component](System& system) {
+                    created = system.create(component);
+                });
+                return created;
+            };
+            return LinkLifetime(true);
         }
-        return false;
+        return LinkLifetime(false);
     }
 
     template <typename Callable>
@@ -40,13 +63,19 @@ public:
     }
 
 private:
+    static void unlink()
+    {
+        exists = false;
+        createFn = nullptr;
+    }
+
     static bool exists;
-    static std::function<bool(Component*&)> createFn;
+    static bool (*createFn)(Component*&);
 };
 
 template <class Component>
 bool Components<Component>::exists = false;
 
 template <class Component>
-std::function<bool(Component*&)> Components<Component>::createFn;
+bool (*Components<Component>::createFn)(Component*&) = nullptr;
 }
