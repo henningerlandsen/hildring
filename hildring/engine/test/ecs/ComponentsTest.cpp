@@ -29,18 +29,18 @@ SCENARIO("Registering components")
     {
         WHEN("linking Component")
         {
-            const auto result = ecs::Components<Component>::link<System>();
+            const auto linkResult = ecs::Components<Component>::link<System>();
             THEN("linking succeeds")
             {
-                CHECK(result);
+                CHECK(linkResult);
             }
 
             WHEN("creating Component")
             {
-                const auto result = ecs::Components<Component>::create();
+                const auto createResult = ecs::Components<Component>::create();
                 THEN("create fails")
                 {
-                    CHECK(result == false);
+                    CHECK(createResult == false);
                 }
             }
 
@@ -50,8 +50,8 @@ SCENARIO("Registering components")
 
                 THEN("Component can be created")
                 {
-                    const auto result = ecs::Components<Component>::create();
-                    CHECK(result);
+                    const auto createResult = ecs::Components<Component>::create();
+                    CHECK(createResult);
                 }
             }
         }
@@ -63,10 +63,10 @@ SCENARIO("Registering components")
 
         WHEN("linking a Component")
         {
-            const auto result = ecs::Components<Component>::link<System>();
+            const auto linkResult = ecs::Components<Component>::link<System>();
             THEN("linking succeeds")
             {
-                CHECK(result);
+                CHECK(linkResult);
             }
 
             WHEN("creating Component")
@@ -97,10 +97,10 @@ SCENARIO("Registering components")
 
             WHEN("component is already linked")
             {
-                const auto result = ecs::Components<Component>::link<System>();
+                const auto linkResult2 = ecs::Components<Component>::link<System>();
                 THEN("linking fails")
                 {
-                    CHECK(result == false);
+                    CHECK(linkResult2 == false);
                 }
             }
         }
