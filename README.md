@@ -33,10 +33,11 @@ Playground for new ideas, techniques and tools in the form of an OpenGL renderni
         - [ ] can have Components
     - [ ] Components
         - [x] belong to one system
-        - [ ] can be created 
+        - [x] can be created 
         - [ ] can be modified
         - [ ] can be destroyed
         - [ ] are tied to an EntityId
+            - [ ] Can more Components be created for the same Entity ID? Let system decide?
     - [ ] Systems
         - [x] Systems can be registered
         - [x] Constant lookup
@@ -45,3 +46,13 @@ Playground for new ideas, techniques and tools in the form of an OpenGL renderni
 - [ ] GLContext wrapper
 - [ ] Capture input events
 - [ ] Add scripting framework
+
+```
+auto entity = Entities::create();
+entity.add<Triangles>([](Triangles& t){
+    t.vertices = {{1.0, 0.0}, {0.0, 0.0}, {0.0, 1.0}}; 
+})
+entity.add<Texture>([](Texture& t){
+    t.file = "texture.png"
+});
+```
