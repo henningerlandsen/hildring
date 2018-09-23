@@ -22,6 +22,14 @@ public:
             }
         }
 
+        LinkLifetime(const LinkLifetime&) = delete;
+
+        LinkLifetime(LinkLifetime&& other)
+        {
+            this->valid = other.valid;
+            other.valid = false;
+        }
+
         operator bool() const { return valid; }
 
     private:

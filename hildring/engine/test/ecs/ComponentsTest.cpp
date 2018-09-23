@@ -29,7 +29,7 @@ SCENARIO("Registering components")
     {
         WHEN("linking Component")
         {
-            const auto linkResult = ecs::Components<Component>::link<System>();
+            auto linkResult = ecs::Components<Component>::link<System>();
             THEN("linking succeeds")
             {
                 CHECK(linkResult);
@@ -52,6 +52,24 @@ SCENARIO("Registering components")
                 {
                     const auto createResult = ecs::Components<Component>::create();
                     CHECK(createResult);
+                }
+            }
+
+            WHEN("lifetime token is moved")
+            {
+                {
+                    const auto linkResultCopy = std::move(linkResult);
+                    THEN("link still exists")
+                    {
+                        CHECK(ecs::Components<Component>::create() == true);
+                    }
+                }
+                WHEN("moved token is destroyed")
+                {
+                    THEN("link is broken")
+                    {
+                        CHECK(ecs::Components<Component>::create() == false);
+                    }
                 }
             }
         }
