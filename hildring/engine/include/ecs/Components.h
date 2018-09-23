@@ -39,8 +39,7 @@ public:
     template <typename System>
     static LinkLifetime link()
     {
-        if (!exists) {
-            exists = true;
+        if (!linked()) {
             createFn = [](Component*& component) {
                 bool created = false;
                 ecs::Systems::with<System>([&created, &component](System& system) {
@@ -56,7 +55,7 @@ public:
     template <typename Callable>
     static bool create(Callable&& callback)
     {
-        if (exists) {
+        if (linked()) {
             Component* component = nullptr;
             createFn(component);
             if (component) {
@@ -75,16 +74,16 @@ public:
 private:
     static void unlink()
     {
-        exists = false;
         createFn = nullptr;
     }
 
-    static bool exists;
+    static bool linked()
+    {
+        return createFn != nullptr;
+    }
+
     static bool (*createFn)(Component*&);
 };
-
-template <class Component>
-bool Components<Component>::exists = false;
 
 template <class Component>
 bool (*Components<Component>::createFn)(Component*&) = nullptr;
