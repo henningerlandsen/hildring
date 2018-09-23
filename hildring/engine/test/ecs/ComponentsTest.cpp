@@ -14,7 +14,7 @@ SCENARIO("Registering components")
     struct System {
         System() {}
 
-        bool create(Component*& c)
+        bool create(const ecs::EntityId, Component*& c)
         {
             createCalled = true;
             c = &component;
@@ -37,7 +37,7 @@ SCENARIO("Registering components")
 
             WHEN("creating Component")
             {
-                const auto createResult = ecs::Components<Component>::create();
+                const auto createResult = ecs::Components<Component>::create(42);
                 THEN("create fails")
                 {
                     CHECK(createResult == false);
@@ -50,7 +50,7 @@ SCENARIO("Registering components")
 
                 THEN("Component can be created")
                 {
-                    const auto createResult = ecs::Components<Component>::create();
+                    const auto createResult = ecs::Components<Component>::create(42);
                     CHECK(createResult);
                 }
             }
@@ -61,14 +61,14 @@ SCENARIO("Registering components")
                     const auto linkResultCopy = std::move(linkResult);
                     THEN("link still exists")
                     {
-                        CHECK(ecs::Components<Component>::create() == true);
+                        CHECK(ecs::Components<Component>::create(42) == true);
                     }
                 }
                 WHEN("moved token is destroyed")
                 {
                     THEN("link is broken")
                     {
-                        CHECK(ecs::Components<Component>::create() == false);
+                        CHECK(ecs::Components<Component>::create(42) == false);
                     }
                 }
             }
@@ -91,6 +91,7 @@ SCENARIO("Registering components")
             {
                 bool didRunInit = false;
                 const auto didCreate = ecs::Components<Component>::create(
+                    42,
                     [&didRunInit](Component&) {
                         didRunInit = true;
                     });
@@ -111,6 +112,16 @@ SCENARIO("Registering components")
                 {
                     CHECK(didCreate);
                 }
+
+                THEN("Component can be accessed")
+                {
+                    CHECK(ecs::Components<Component>::with(42, [](Component& c) {
+                        c.name = "Dingo";
+                    }));
+                    CHECK(ecs::Systems::with<System>([](System& s) {
+                        CHECK(s.component.name == "Dingo");
+                    }));
+                }
             }
 
             WHEN("component is already linked")
@@ -127,7 +138,7 @@ SCENARIO("Registering components")
     GIVEN("System cannot allocate")
     {
         struct BadAllocSystem {
-            bool create(int*&)
+            bool create(const ecs::EntityId, int*&)
             {
                 return false;
             }
@@ -138,7 +149,7 @@ SCENARIO("Registering components")
 
         WHEN("creating component")
         {
-            const auto result = ecs::Components<int>::create();
+            const auto result = ecs::Components<int>::create(42);
             THEN("create fails")
             {
                 CHECK(result == false);

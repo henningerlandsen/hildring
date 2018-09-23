@@ -1,8 +1,7 @@
 #pragma once
 
+#include "ecs/EntityId.h"
 #include "ecs/Systems.h"
-
-#include <functional>
 
 namespace ecs {
 template <typename Component>
@@ -40,10 +39,10 @@ public:
     static LinkLifetime link()
     {
         if (!linked()) {
-            createFn = [](Component*& component) {
+            createFn = [](const ecs::EntityId id, Component*& component) {
                 bool created = false;
-                ecs::Systems::with<System>([&created, &component](System& system) {
-                    created = system.create(component);
+                ecs::Systems::with<System>([&created, id, &component](System& system) {
+                    created = system.create(id, component);
                 });
                 return created;
             };
@@ -53,11 +52,11 @@ public:
     }
 
     template <typename Callable>
-    static bool create(Callable&& callback)
+    static bool create(const ecs::EntityId id, Callable&& callback)
     {
         if (linked()) {
             Component* component = nullptr;
-            createFn(component);
+            createFn(id, component);
             if (component) {
                 callback(*component);
                 return true;
@@ -66,9 +65,15 @@ public:
         return false;
     }
 
-    static bool create()
+    static bool create(const ecs::EntityId id)
     {
-        return create([](Component&) {});
+        return create(id, [](Component&) {});
+    }
+
+    template <typename Callable>
+    static bool with(const ecs::EntityId, Callable&&)
+    {
+        return false;
     }
 
 private:
@@ -82,9 +87,9 @@ private:
         return createFn != nullptr;
     }
 
-    static bool (*createFn)(Component*&);
+    static bool (*createFn)(const ecs::EntityId, Component*&);
 };
 
 template <class Component>
-bool (*Components<Component>::createFn)(Component*&) = nullptr;
+bool (*Components<Component>::createFn)(const ecs::EntityId, Component*&) = nullptr;
 }
