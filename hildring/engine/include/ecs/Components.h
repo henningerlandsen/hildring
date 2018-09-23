@@ -48,11 +48,13 @@ public:
     template <typename Callable>
     static bool create(Callable&& callback)
     {
-        Component* component = nullptr;
-        createFn(component);
-        if (component) {
-            callback(*component);
-            return true;
+        if (exists) {
+            Component* component = nullptr;
+            createFn(component);
+            if (component) {
+                callback(*component);
+                return true;
+            }
         }
         return false;
     }
