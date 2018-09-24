@@ -6,6 +6,8 @@
 namespace ecs {
 template <typename Component>
 class Components {
+    using MutatingFn = bool (*)(const ecs::EntityId, Component*&);
+
 public:
     class LinkLifetime {
     public:
@@ -61,15 +63,7 @@ public:
     template <typename Callable>
     static bool create(const ecs::EntityId id, Callable&& callback)
     {
-        if (linked()) {
-            Component* component = nullptr;
-            createFn(id, component);
-            if (component) {
-                callback(*component);
-                return true;
-            }
-        }
-        return false;
+        return call(createFn, id, callback);
     }
 
     static bool create(const ecs::EntityId id)
@@ -80,15 +74,7 @@ public:
     template <typename Callable>
     static bool with(const ecs::EntityId id, Callable&& callback)
     {
-        if (linked()) {
-            Component* component = nullptr;
-            getFn(id, component);
-            if (component) {
-                callback(*component);
-                return true;
-            }
-        }
-        return false;
+        return call(getFn, id, callback);
     }
 
 private:
@@ -103,7 +89,20 @@ private:
         return createFn != nullptr && getFn != nullptr;
     }
 
-    using MutatingFn = bool (*)(const ecs::EntityId, Component*&);
+    template <typename Callable>
+    static bool call(MutatingFn method, const ecs::EntityId id, Callable&& callback)
+    {
+        if (linked()) {
+            Component* component = nullptr;
+            method(id, component);
+            if (component) {
+                callback(*component);
+                return true;
+            }
+        }
+        return false;
+    }
+
     static MutatingFn createFn;
     static MutatingFn getFn;
 };
