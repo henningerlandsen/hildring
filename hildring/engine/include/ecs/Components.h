@@ -55,9 +55,9 @@ public:
                 });
                 return found;
             };
-            return LinkLifetime(true);
+            return true;
         }
-        return LinkLifetime(false);
+        return false;
     }
 
     template <typename Callable>
