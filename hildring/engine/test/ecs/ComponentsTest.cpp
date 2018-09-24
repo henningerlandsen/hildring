@@ -162,6 +162,15 @@ SCENARIO("Registering components")
                 CHECK(result == false);
             }
         }
+
+        WHEN("accessing component")
+        {
+            const auto result = ecs::Components<int>::with(11, [](int&) {});
+            THEN("it cannot access non-existing component")
+            {
+                CHECK(result == false);
+            }
+        }
     }
 }
 
