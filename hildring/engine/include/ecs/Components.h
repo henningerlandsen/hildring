@@ -103,13 +103,15 @@ private:
         return createFn != nullptr && getFn != nullptr;
     }
 
-    static bool (*createFn)(const ecs::EntityId, Component*&);
-    static bool (*getFn)(const ecs::EntityId, Component*&);
+    using MutatingFn = bool (*)(const ecs::EntityId, Component*&);
+    static MutatingFn createFn;
+    static MutatingFn getFn;
 };
 
 template <class Component>
-bool (*Components<Component>::createFn)(const ecs::EntityId, Component*&) = nullptr;
+typename Components<Component>::MutatingFn Components<Component>::createFn = nullptr;
 
 template <class Component>
-bool (*Components<Component>::getFn)(const ecs::EntityId, Component*&) = nullptr;
+typename Components<Component>::MutatingFn Components<Component>::getFn = nullptr;
+
 }
