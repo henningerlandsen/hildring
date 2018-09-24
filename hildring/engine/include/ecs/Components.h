@@ -46,6 +46,13 @@ public:
                 });
                 return created;
             };
+            getFn = [](const ecs::EntityId id, Component*& component) {
+                bool found = false;
+                ecs::Systems::with<System>([&found, id, &component](System& system) {
+                    found = system.get(id, component);
+                });
+                return found;
+            };
             return LinkLifetime(true);
         }
         return LinkLifetime(false);
@@ -71,8 +78,16 @@ public:
     }
 
     template <typename Callable>
-    static bool with(const ecs::EntityId, Callable&&)
+    static bool with(const ecs::EntityId id, Callable&& callback)
     {
+        if (linked()) {
+            Component* component = nullptr;
+            getFn(id, component);
+            if (component) {
+                callback(*component);
+                return true;
+            }
+        }
         return false;
     }
 
@@ -80,16 +95,21 @@ private:
     static void unlink()
     {
         createFn = nullptr;
+        getFn = nullptr;
     }
 
     static bool linked()
     {
-        return createFn != nullptr;
+        return createFn != nullptr && getFn != nullptr;
     }
 
     static bool (*createFn)(const ecs::EntityId, Component*&);
+    static bool (*getFn)(const ecs::EntityId, Component*&);
 };
 
 template <class Component>
 bool (*Components<Component>::createFn)(const ecs::EntityId, Component*&) = nullptr;
+
+template <class Component>
+bool (*Components<Component>::getFn)(const ecs::EntityId, Component*&) = nullptr;
 }

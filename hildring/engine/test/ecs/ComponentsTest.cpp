@@ -21,6 +21,11 @@ SCENARIO("Registering components")
             return true;
         }
 
+        bool get(const ecs::EntityId, Component*& c)
+        {
+            c = &component;
+            return true;
+        }
         bool createCalled = false;
         Component component;
     };
@@ -142,6 +147,8 @@ SCENARIO("Registering components")
             {
                 return false;
             }
+
+            bool get(const ecs::EntityId, int*&) { return false; }
         };
 
         ecs::Systems::create<BadAllocSystem>();
