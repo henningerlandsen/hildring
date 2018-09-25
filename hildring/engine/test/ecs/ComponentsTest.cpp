@@ -26,7 +26,15 @@ SCENARIO("Registering components")
             c = &component;
             return true;
         }
-        bool createCalled = false;
+
+        bool destroy(const ecs::EntityId)
+        {
+            destroyCalled = true;
+            return true;
+        }
+
+        bool createCalled{ false };
+        bool destroyCalled{ false };
         Component component;
     };
 
@@ -46,6 +54,26 @@ SCENARIO("Registering components")
                 THEN("create fails")
                 {
                     CHECK(createResult == false);
+                }
+            }
+
+            WHEN("accessing Component")
+            {
+                const auto result = ecs::Components<Component>::with(
+                    42,
+                    [](Component&) { assert(false); });
+                THEN("accessing fails")
+                {
+                    CHECK(result == false);
+                }
+            }
+
+            WHEN("deleting Component")
+            {
+                const auto result = ecs::Components<Component>::destroy(42);
+                THEN("delete fails")
+                {
+                    CHECK(result == false);
                 }
             }
 
@@ -92,7 +120,7 @@ SCENARIO("Registering components")
                 CHECK(linkResult);
             }
 
-            WHEN("creating Component")
+            WHEN("Component is created")
             {
                 bool didRunInit = false;
                 const auto didCreate = ecs::Components<Component>::create(
@@ -127,6 +155,18 @@ SCENARIO("Registering components")
                         CHECK(s.component.name == "Dingo");
                     }));
                 }
+
+                WHEN("Component is deleted")
+                {
+                    CHECK(ecs::Components<Component>::destroy(42));
+
+                    THEN("Systems destroy is called")
+                    {
+                        CHECK(ecs::Systems::with<System>([](System& s) {
+                            CHECK(s.destroyCalled);
+                        }));
+                    }
+                }
             }
 
             WHEN("component is already linked")
@@ -149,6 +189,8 @@ SCENARIO("Registering components")
             }
 
             bool get(const ecs::EntityId, int*&) { return false; }
+
+            bool destroy(const ecs::EntityId) { return false; }
         };
 
         ecs::Systems::create<BadAllocSystem>();

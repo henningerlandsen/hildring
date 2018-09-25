@@ -7,6 +7,7 @@ namespace ecs {
 template <typename Component>
 class Components {
     using MutatingFn = bool (*)(const ecs::EntityId, Component*&);
+    using DestroyFn = bool (*)(const ecs::EntityId);
 
 public:
     class LinkLifetime {
@@ -55,6 +56,13 @@ public:
                 });
                 return found;
             };
+            destroyFn = [](const ecs::EntityId id) {
+                bool destroyed = false;
+                ecs::Systems::with<System>([&destroyed, id](System& system) {
+                    destroyed = system.destroy(id);
+                });
+                return destroyed;
+            };
             return true;
         }
         return false;
@@ -77,16 +85,22 @@ public:
         return call(getFn, id, callback);
     }
 
+    static bool destroy(const ecs::EntityId id)
+    {
+        return destroyFn(id);
+    }
+
 private:
     static void unlink()
     {
         createFn = nullptr;
         getFn = nullptr;
+        destroyFn = nullptr;
     }
 
     static bool linked()
     {
-        return createFn != nullptr && getFn != nullptr;
+        return createFn != nullptr && getFn != nullptr && destroyFn != nullptr;
     }
 
     template <typename Callable>
@@ -105,6 +119,7 @@ private:
 
     static MutatingFn createFn;
     static MutatingFn getFn;
+    static DestroyFn destroyFn;
 };
 
 template <class Component>
@@ -113,4 +128,6 @@ typename Components<Component>::MutatingFn Components<Component>::createFn = nul
 template <class Component>
 typename Components<Component>::MutatingFn Components<Component>::getFn = nullptr;
 
+template <class Component>
+typename Components<Component>::DestroyFn Components<Component>::destroyFn = nullptr;
 }
