@@ -213,6 +213,15 @@ SCENARIO("Registering components")
                 CHECK(result == false);
             }
         }
+
+        WHEN("destroying component")
+        {
+            const auto result = ecs::Components<int>::destroy(0);
+            THEN("it cannot destroy non-existing component")
+            {
+                CHECK(result == false);
+            }
+        }
     }
 }
 
