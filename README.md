@@ -31,17 +31,20 @@ Playground for new ideas, techniques and tools in the form of an OpenGL renderni
         - [ ] can be destroyed
             - [ ] attached Components are also destroyed
         - [ ] can have Components
-    - [ ] Components
+    - [x] Components
         - [x] belong to one system
         - [x] can be created 
-        - [ ] can be modified
-        - [ ] can be destroyed
-        - [ ] are tied to an EntityId
-            - [ ] Can more Components be created for the same Entity ID? Let system decide?
-    - [ ] Systems
+        - [x] can be modified
+        - [x] can be destroyed
+        - [x] are tied to an EntityId
+    - [x] Systems
         - [x] Systems can be registered
         - [x] Constant lookup
         - [x] Use lambda instead of returning pointer
+    - [ ] Event subscription
+        - [ ] Input events
+        - [ ] Entity events (destruction)
+        - [ ] Update tick event
 
 - [ ] GLContext wrapper
 - [ ] Capture input events
