@@ -38,6 +38,36 @@ SCENARIO("Registering components")
         Component component;
     };
 
+    GIVEN("Component and System is not linked")
+    {
+        WHEN("trying to create Component")
+        {
+            const auto result = ecs::Components<Component>::with(13, [](Component&) {});
+            THEN("create fails")
+            {
+                CHECK(result == false);
+            }
+        }
+
+        WHEN("trying to access Component")
+        {
+            const auto result = ecs::Components<Component>::create(42);
+            THEN("accessing fails")
+            {
+                CHECK(result == false);
+            }
+        }
+
+        WHEN("trying to delete Component")
+        {
+            const auto result = ecs::Components<Component>::destroy(42);
+            THEN("delete fails")
+            {
+                CHECK(result == false);
+            }
+        }
+    }
+
     GIVEN("System is not created")
     {
         WHEN("linking Component")

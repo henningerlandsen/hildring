@@ -87,7 +87,7 @@ public:
 
     static bool destroy(const ecs::EntityId id)
     {
-        return destroyFn(id);
+        return linked() ? destroyFn(id) : false;
     }
 
 private:
