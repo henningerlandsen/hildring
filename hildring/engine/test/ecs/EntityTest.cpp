@@ -24,4 +24,15 @@ SCENARIO("Create Entity")
             CHECK(e1.getId() != e2.getId());
         }
     }
+
+    WHEN("an Entity is copied")
+    {
+        auto e = ecs::Entity();
+        auto e2 = e;
+
+        THEN("they have the same id")
+        {
+            CHECK(e.getId() == e2.getId());
+        }
+    }
 }
