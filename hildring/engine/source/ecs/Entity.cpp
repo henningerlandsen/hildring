@@ -3,14 +3,14 @@
 namespace ecs {
 namespace {
     EntityId topId = 0;
-    EntityId generateId()
+    EntityId getNextId()
     {
         topId = topId + 1;
         return topId;
     }
 }
 Entity::Entity()
-    : id(generateId())
+    : id(getNextId())
 {
 }
 
