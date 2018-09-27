@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.8)
 
 project(hildring C CXX)
 
@@ -16,12 +16,14 @@ set(SOURCES
     source/Engine.cpp
     source/Painter.cpp
     source/Window.cpp
+
+    source/ecs/Systems.cpp
 )
 
 if (MSVC)
     add_compile_options(/W4 /WX)
 else()
-    add_compile_options(-std=c++14 -Wall -Wextra -Werror)
+    add_compile_options(-Wall -Wextra -Werror)
 
     # Coverage
     set(ENABLE_COVERAGE false CACHE BOOL "Enable code coverage target")
@@ -40,6 +42,7 @@ add_dependencies(${PROJECT_NAME} glfw)
 # Tests
 set(TEST_SOURCES
     test/main.cpp
+    test/ecs/ComponentsTest.cpp
     test/ecs/SystemsTest.cpp
     test/util/IndexTest.cpp
 )
@@ -48,7 +51,12 @@ set(TEST_EXECUTABLE ${PROJECT_NAME}-tests)
 
 add_executable(${TEST_EXECUTABLE} ${TEST_SOURCES})
 
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
+set_property(TARGET ${TEST_EXECUTABLE} PROPERTY CXX_STANDARD 17)
+
 target_include_directories(${TEST_EXECUTABLE} PRIVATE ../externals/catch2)
+
+target_link_libraries(${TEST_EXECUTABLE} ${PROJECT_NAME})
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND ENABLE_COVERAGE)
     target_link_libraries(${PROJECT_NAME} debug --coverage)

@@ -10,7 +10,7 @@ Playground for new ideas, techniques and tools in the form of an OpenGL renderni
 - [x] Select a window framework (gflw)
 - [x] Setup a rendering window
 - [x] Window wrapper
-- [ ] Build verification
+- [x] Build verification
     - [x] Travis
         - [x] Linux
         - [x] Mac
@@ -27,12 +27,35 @@ Playground for new ideas, techniques and tools in the form of an OpenGL renderni
 - [x] Testing framework
 - [ ] Engine architechture:
     - [ ] Entities
-    - [ ] Components
-    - [ ] Systems
+        - [ ] can be created
+        - [ ] can be destroyed
+            - [ ] attached Components are also destroyed
+        - [ ] can have Components
+    - [x] Components
+        - [x] belong to one system
+        - [x] can be created 
+        - [x] can be modified
+        - [x] can be destroyed
+        - [x] are tied to an EntityId
+    - [x] Systems
         - [x] Systems can be registered
         - [x] Constant lookup
         - [x] Use lambda instead of returning pointer
+    - [ ] Event subscription
+        - [ ] Input events
+        - [ ] Entity events (destruction)
+        - [ ] Update tick event
 
 - [ ] GLContext wrapper
 - [ ] Capture input events
 - [ ] Add scripting framework
+
+```
+auto entity = Entities::create();
+entity.add<Triangles>([](Triangles& t){
+    t.vertices = {{1.0, 0.0}, {0.0, 0.0}, {0.0, 1.0}}; 
+})
+entity.add<Texture>([](Texture& t){
+    t.file = "texture.png"
+});
+```

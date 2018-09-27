@@ -67,8 +67,6 @@ private:
     static SystemsContainer systems;
 };
 
-Systems::SystemsContainer Systems::systems = Systems::SystemsContainer();
-
 template <class System>
 Systems::SystemIndex Systems::SystemMapping<System>::index = Systems::SystemIndex();
 }

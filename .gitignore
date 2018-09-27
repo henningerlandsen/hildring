@@ -45,3 +45,4 @@ coverage/
 
 # Vim swap files
 *.swp
+.session.vim
