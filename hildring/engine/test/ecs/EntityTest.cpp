@@ -11,7 +11,7 @@ SCENARIO("Create Entity")
 
         THEN("it has a valid Id")
         {
-            CHECK(e.getId().valid());
+            CHECK(e.id().valid());
         }
     }
 
@@ -22,7 +22,7 @@ SCENARIO("Create Entity")
 
         THEN("they do not have the same id")
         {
-            CHECK(e1.getId() != e2.getId());
+            CHECK(e1.id() != e2.id());
         }
     }
 
@@ -33,7 +33,7 @@ SCENARIO("Create Entity")
 
         THEN("they have the same id")
         {
-            CHECK(e.getId() == e2.getId());
+            CHECK(e.id() == e2.id());
         }
     }
 }
@@ -64,7 +64,7 @@ SCENARIO("Entities have components")
         auto entity = ecs::Entity();
         ecs::Systems::create<System>();
         ecs::Systems::with<System>([entity](System& s) {
-            s.expectedId = entity.getId();
+            s.expectedId = entity.id();
         });
         auto link = ecs::Components<int>::link<System>();
 

@@ -10,7 +10,7 @@ namespace {
     }
 }
 Entity::Entity()
-    : id(getNextId())
+    : _id(getNextId())
 {
 }
 

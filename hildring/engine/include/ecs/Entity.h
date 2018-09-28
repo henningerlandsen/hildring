@@ -9,18 +9,18 @@ public:
     Entity();
     ~Entity();
 
-    EntityId getId() const { return id; }
+    EntityId id() const { return _id; }
 
     template <typename Component, typename Callable>
     bool add(Callable&& callback);
 
 private:
-    const EntityId id;
+    const EntityId _id;
 };
 
 template <typename Component, typename Callable>
 bool Entity::add(Callable&& callback)
 {
-    return Components<Component>::create(id, callback);
+    return Components<Component>::create(_id, callback);
 }
 }
