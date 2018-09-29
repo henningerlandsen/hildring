@@ -56,7 +56,12 @@ SCENARIO("Entities have components")
             getCalled = true;
             return true;
         }
-        bool destroy(const ecs::EntityId) { return true; }
+        bool destroy(const ecs::EntityId id)
+        {
+            CHECK(expectedId == id);
+            destroyCalled = true;
+            return true;
+        }
 
         ecs::EntityId expectedId = 0;
         bool createCalled = false;
@@ -105,6 +110,14 @@ SCENARIO("Entities have components")
                 CHECK(entity.with<int>([](int&) {}));
                 CHECK(ecs::Systems::with<System>([](System& s) {
                     CHECK(s.getCalled);
+                }));
+            }
+
+            THEN("Component can be removed")
+            {
+                CHECK(entity.destroy<int>());
+                CHECK(ecs::Systems::with<System>([](System& s) {
+                    CHECK(s.destroyCalled);
                 }));
             }
         }
