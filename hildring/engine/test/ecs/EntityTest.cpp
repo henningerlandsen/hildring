@@ -48,7 +48,14 @@ SCENARIO("Entities have components")
             createCalled = true;
             return true;
         }
-        bool get(const ecs::EntityId, int*&) { return true; }
+
+        bool get(const ecs::EntityId id, int*& component)
+        {
+            CHECK(expectedId == id);
+            component = &value;
+            getCalled = true;
+            return true;
+        }
         bool destroy(const ecs::EntityId) { return true; }
 
         ecs::EntityId expectedId = 0;
@@ -90,6 +97,14 @@ SCENARIO("Entities have components")
             {
                 CHECK(ecs::Systems::with<System>([](System& s) {
                     CHECK(s.value == 9);
+                }));
+            }
+
+            THEN("Component can be accessed")
+            {
+                CHECK(entity.with<int>([](int&) {}));
+                CHECK(ecs::Systems::with<System>([](System& s) {
+                    CHECK(s.getCalled);
                 }));
             }
         }
