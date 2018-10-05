@@ -18,6 +18,7 @@ set(SOURCES
     source/Window.cpp
 
     source/ecs/Systems.cpp
+    source/util/LifetimeToken.cpp
 )
 
 if (MSVC)
@@ -45,6 +46,7 @@ set(TEST_SOURCES
     test/ecs/ComponentsTest.cpp
     test/ecs/SystemsTest.cpp
     test/util/IndexTest.cpp
+    test/util/LifetimeTokenTest.cpp
 )
 
 set(TEST_EXECUTABLE ${PROJECT_NAME}-tests)
