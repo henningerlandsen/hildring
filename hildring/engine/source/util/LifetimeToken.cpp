@@ -6,8 +6,23 @@ LifetimeToken::LifetimeToken(std::function<void()> expirationCallback)
 {
 }
 
+LifetimeToken::LifetimeToken() {}
+
+LifetimeToken::LifetimeToken(LifetimeToken&& other)
+    : callback(std::move(other.callback))
+{
+    other.callback = nullptr;
+}
+
 LifetimeToken::~LifetimeToken()
 {
-    callback();
+    if (callback) {
+        callback();
+    }
+}
+
+LifetimeToken::operator bool() const
+{
+    return callback != nullptr;
 }
 }

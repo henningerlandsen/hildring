@@ -6,10 +6,11 @@ namespace util {
 class [[nodiscard]] LifetimeToken {
     public:
         LifetimeToken(std::function<void()> expirationCallback);
+        LifetimeToken();
         ~LifetimeToken();
 
         LifetimeToken(const LifetimeToken& other) = delete;
-        LifetimeToken(LifetimeToken&& other);
+        LifetimeToken(LifetimeToken && other);
 
         operator bool() const;
 
