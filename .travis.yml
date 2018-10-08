@@ -11,10 +11,10 @@ matrix:
               packages:
                 - xorg-dev
                 - cmake
-                - g++-8
+                - g++-7
                 - lcov
         env:
-          - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
+          - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
           - TARGET="tests"
           - CMAKE_PARAMS=""
       - os: linux
@@ -25,10 +25,10 @@ matrix:
               packages:
                 - xorg-dev
                 - cmake
-                - g++-8
+                - g++-7
                 - lcov
         env:
-          - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
+          - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
           - TARGET="hildring-coverage"
           - CMAKE_PARAMS="-DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=True"
       - os: osx
@@ -40,7 +40,6 @@ before_install:
   - if [ $TRAVIS_OS_NAME == osx ]; then brew upgrade cmake; fi
   - if [ $TRAVIS_OS_NAME == linux ]; then eval "${MATRIX_EVAL}"; fi
 script: 
-  - if [ $TRAVIS_OS_NAME == linux ]; then ls -la /usr/bin; fi
   - cmake . ${CMAKE_PARAMS}
   - make
   - make ${TARGET}
