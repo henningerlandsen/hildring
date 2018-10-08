@@ -28,11 +28,6 @@ public:
         return false;
     }
 
-    static void reset()
-    {
-        system.reset();
-    }
-
 private:
     static System* getSystem()
     {
@@ -42,6 +37,11 @@ private:
     static bool valid()
     {
         return system != nullptr;
+    }
+
+    static void reset()
+    {
+        system.reset();
     }
 
     static std::unique_ptr<System> system;

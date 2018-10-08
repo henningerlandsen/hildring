@@ -41,55 +41,55 @@ SCENARIO("Adding Systems")
 
     GIVEN("a System is added")
     {
+
         LifetimeStatus status{};
-        auto result = ecs::Systems<LifetimeTracker>::create(status);
-
-        THEN("the System is created")
         {
-            CHECK(status.isCtorCalled);
-        }
+            auto token = ecs::Systems<LifetimeTracker>::create(status);
 
-        THEN("result is true")
-        {
-            CHECK(result == true);
-        }
-
-        THEN("the System persists")
-        {
-            CHECK(!status.isDtorCalled);
-        }
-
-        THEN("the System is not copied")
-        {
-            CHECK(status.copyCount == 0);
-        }
-
-        WHEN("the same System is added again")
-        {
-            LifetimeStatus status2{};
-            auto result2 = ecs::Systems<LifetimeTracker>::create(status2);
-
-            THEN("the System is not created")
+            THEN("the System is created")
             {
-                CHECK(false == status2.isCtorCalled);
+                CHECK(status.isCtorCalled);
             }
 
-            THEN("result is false")
+            THEN("result is true")
             {
-                CHECK(false == result2);
+                CHECK(token == true);
+            }
+
+            THEN("the System persists")
+            {
+                CHECK(!status.isDtorCalled);
+            }
+
+            THEN("the System is not copied")
+            {
+                CHECK(status.copyCount == 0);
+            }
+
+            WHEN("the same System is added again")
+            {
+                LifetimeStatus status2{};
+                auto result2 = ecs::Systems<LifetimeTracker>::create(status2);
+
+                THEN("the System is not created")
+                {
+                    CHECK(false == status2.isCtorCalled);
+                }
+
+                THEN("result is false")
+                {
+                    CHECK(false == result2);
+                }
             }
         }
 
-        WHEN("Systems are reset")
+        WHEN("token expires")
         {
-            ecs::Systems<LifetimeTracker>::reset();
-
             THEN("the System is destroyed")
             {
                 CHECK(status.isDtorCalled);
             }
         }
-        ecs::Systems<LifetimeTracker>::reset();
     }
 
     GIVEN("arguments are passed")
