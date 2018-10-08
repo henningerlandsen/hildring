@@ -2,6 +2,7 @@
 
 #include "ecs/EntityId.h"
 #include "ecs/Systems.h"
+#include "util/LifetimeToken.h"
 
 namespace ecs {
 template <typename Component>
@@ -10,36 +11,8 @@ class Components {
     using DestroyFn = bool (*)(const ecs::EntityId);
 
 public:
-    class LinkLifetime {
-    public:
-        LinkLifetime(bool validLink)
-            : valid(validLink)
-        {
-        }
-
-        ~LinkLifetime()
-        {
-            if (valid) {
-                Components<Component>::unlink();
-            }
-        }
-
-        LinkLifetime(const LinkLifetime&) = delete;
-
-        LinkLifetime(LinkLifetime&& other)
-        {
-            this->valid = other.valid;
-            other.valid = false;
-        }
-
-        operator bool() const { return valid; }
-
-    private:
-        bool valid{ false };
-    };
-
     template <typename System>
-    static LinkLifetime link()
+    static util::LifetimeToken link()
     {
         if (!linked()) {
             createFn = [](const ecs::EntityId id, Component*& component) {
@@ -63,9 +36,11 @@ public:
                 });
                 return destroyed;
             };
-            return true;
+            return util::LifetimeToken([]() {
+                Components<Component>::unlink();
+            });
         }
-        return false;
+        return util::LifetimeToken();
     }
 
     template <typename Callable>
