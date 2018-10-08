@@ -108,7 +108,7 @@ SCENARIO("Adding Systems")
         WHEN("a system is added")
         {
             LifetimeStatus status{};
-            ecs::Systems<CopyControl>::create(LifetimeTracker(status));
+            auto token = ecs::Systems<CopyControl>::create(LifetimeTracker(status));
 
             THEN("arguments are not copied")
             {
@@ -129,7 +129,7 @@ SCENARIO("Adding Systems")
             int myValue = 0;
         };
 
-        ecs::Systems<MySystem>::create(42);
+        auto token = ecs::Systems<MySystem>::create(42);
 
         THEN("it can be accessed")
         {
@@ -160,7 +160,7 @@ SCENARIO("Adding Systems")
             struct OtherSystem {
             };
 
-            ecs::Systems<OtherSystem>::create();
+            auto token = ecs::Systems<OtherSystem>::create();
             THEN("earlier systems can be retrieved")
             {
                 ecs::Systems<MySystem>::with([](MySystem& system) {

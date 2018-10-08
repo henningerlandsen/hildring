@@ -1,5 +1,7 @@
 #pragma once
 
+#include "util/LifetimeToken.h"
+
 #include <memory>
 
 namespace ecs {
@@ -7,13 +9,13 @@ template <typename System>
 class Systems {
 public:
     template <typename... Args>
-    static bool create(Args&&... args)
+    static auto create(Args&&... args)
     {
         if (!valid()) {
             system = std::make_unique<System>(std::forward<Args>(args)...);
-            return true;
+            return util::LifetimeToken([]() { Systems<System>::reset(); });
         }
-        return false;
+        return util::LifetimeToken();
     }
 
     template <typename Accessor>
