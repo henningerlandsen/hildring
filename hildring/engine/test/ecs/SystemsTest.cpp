@@ -42,7 +42,7 @@ SCENARIO("Adding Systems")
     GIVEN("a System is added")
     {
         LifetimeStatus status{};
-        auto result = ecs::Systems::create<LifetimeTracker>(status);
+        auto result = ecs::Systems<LifetimeTracker>::create(status);
 
         THEN("the System is created")
         {
@@ -67,7 +67,7 @@ SCENARIO("Adding Systems")
         WHEN("the same System is added again")
         {
             LifetimeStatus status2{};
-            auto result2 = ecs::Systems::create<LifetimeTracker>(status2);
+            auto result2 = ecs::Systems<LifetimeTracker>::create(status2);
 
             THEN("the System is not created")
             {
@@ -82,14 +82,14 @@ SCENARIO("Adding Systems")
 
         WHEN("Systems are reset")
         {
-            ecs::Systems::reset();
+            ecs::Systems<LifetimeTracker>::reset();
 
             THEN("the System is destroyed")
             {
                 CHECK(status.isDtorCalled);
             }
         }
-        ecs::Systems::reset();
+        ecs::Systems<LifetimeTracker>::reset();
     }
 
     GIVEN("arguments are passed")
@@ -108,7 +108,7 @@ SCENARIO("Adding Systems")
         WHEN("a system is added")
         {
             LifetimeStatus status{};
-            ecs::Systems::create<CopyControl>(LifetimeTracker(status));
+            ecs::Systems<CopyControl>::create(LifetimeTracker(status));
 
             THEN("arguments are not copied")
             {
@@ -129,11 +129,11 @@ SCENARIO("Adding Systems")
             int myValue = 0;
         };
 
-        ecs::Systems::create<MySystem>(42);
+        ecs::Systems<MySystem>::create(42);
 
         THEN("it can be accessed")
         {
-            CHECK(ecs::Systems::with<MySystem>([](MySystem&) {}));
+            CHECK(ecs::Systems<MySystem>::with([](MySystem&) {}));
         }
 
         WHEN("it is accessed")
@@ -141,7 +141,7 @@ SCENARIO("Adding Systems")
             THEN("accessor is invoked")
             {
                 auto run = false;
-                ecs::Systems::with<MySystem>([&run](MySystem&) {
+                ecs::Systems<MySystem>::with([&run](MySystem&) {
                     run = true;
                 });
                 CHECK(run);
@@ -149,7 +149,7 @@ SCENARIO("Adding Systems")
 
             THEN("it has the initial values")
             {
-                ecs::Systems::with<MySystem>([](MySystem& system) {
+                ecs::Systems<MySystem>::with([](MySystem& system) {
                     CHECK(42 == system.myValue);
                 });
             }
@@ -160,10 +160,10 @@ SCENARIO("Adding Systems")
             struct OtherSystem {
             };
 
-            ecs::Systems::create<OtherSystem>();
+            ecs::Systems<OtherSystem>::create();
             THEN("earlier systems can be retrieved")
             {
-                ecs::Systems::with<MySystem>([](MySystem& system) {
+                ecs::Systems<MySystem>::with([](MySystem& system) {
                     CHECK(42 == system.myValue);
                 });
             }
@@ -171,13 +171,13 @@ SCENARIO("Adding Systems")
 
         WHEN("values are set")
         {
-            ecs::Systems::with<MySystem>([](MySystem& system) {
+            ecs::Systems<MySystem>::with([](MySystem& system) {
                 system.myValue = 20;
             });
 
             THEN("they remain the same")
             {
-                ecs::Systems::with<MySystem>([](MySystem& system) {
+                ecs::Systems<MySystem>::with([](MySystem& system) {
                     CHECK(20 == system.myValue);
                 });
             }
@@ -193,13 +193,13 @@ SCENARIO("Adding Systems")
         {
             THEN("accessor check fails")
             {
-                CHECK(false == ecs::Systems::with<NoSystem>([](NoSystem&) {}));
+                CHECK(false == ecs::Systems<NoSystem>::with([](NoSystem&) {}));
             }
 
             THEN("accessor is not invoked")
             {
                 auto run = false;
-                ecs::Systems::with<NoSystem>([&run](NoSystem&) {
+                ecs::Systems<NoSystem>::with([&run](NoSystem&) {
                     run = true;
                 });
                 CHECK(run == false);

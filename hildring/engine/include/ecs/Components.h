@@ -17,21 +17,21 @@ public:
         if (!linked()) {
             createFn = [](const ecs::EntityId id, Component*& component) {
                 bool created = false;
-                ecs::Systems::with<System>([&created, id, &component](System& system) {
+                ecs::Systems<System>::with([&created, id, &component](System& system) {
                     created = system.create(id, component);
                 });
                 return created;
             };
             getFn = [](const ecs::EntityId id, Component*& component) {
                 bool found = false;
-                ecs::Systems::with<System>([&found, id, &component](System& system) {
+                ecs::Systems<System>::with([&found, id, &component](System& system) {
                     found = system.get(id, component);
                 });
                 return found;
             };
             destroyFn = [](const ecs::EntityId id) {
                 bool destroyed = false;
-                ecs::Systems::with<System>([&destroyed, id](System& system) {
+                ecs::Systems<System>::with([&destroyed, id](System& system) {
                     destroyed = system.destroy(id);
                 });
                 return destroyed;

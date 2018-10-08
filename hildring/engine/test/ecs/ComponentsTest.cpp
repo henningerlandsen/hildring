@@ -109,7 +109,7 @@ SCENARIO("Registering components")
 
             WHEN("System is created")
             {
-                ecs::Systems::create<System>();
+                ecs::Systems<System>::create();
 
                 THEN("Component can be created")
                 {
@@ -140,7 +140,7 @@ SCENARIO("Registering components")
 
     GIVEN("System is created")
     {
-        ecs::Systems::create<System>();
+        ecs::Systems<System>::create();
 
         WHEN("linking a Component")
         {
@@ -161,7 +161,7 @@ SCENARIO("Registering components")
 
                 THEN("System creates it")
                 {
-                    ecs::Systems::with<System>([](System& system) {
+                    ecs::Systems<System>::with([](System& system) {
                         CHECK(system.createCalled);
                     });
                 }
@@ -181,7 +181,7 @@ SCENARIO("Registering components")
                     CHECK(ecs::Components<Component>::with(42, [](Component& c) {
                         c.name = "Dingo";
                     }));
-                    CHECK(ecs::Systems::with<System>([](System& s) {
+                    CHECK(ecs::Systems<System>::with([](System& s) {
                         CHECK(s.component.name == "Dingo");
                     }));
                 }
@@ -192,7 +192,7 @@ SCENARIO("Registering components")
 
                     THEN("Systems destroy is called")
                     {
-                        CHECK(ecs::Systems::with<System>([](System& s) {
+                        CHECK(ecs::Systems<System>::with([](System& s) {
                             CHECK(s.destroyCalled);
                         }));
                     }
@@ -223,7 +223,7 @@ SCENARIO("Registering components")
             bool destroy(const ecs::EntityId) { return false; }
         };
 
-        ecs::Systems::create<BadAllocSystem>();
+        ecs::Systems<BadAllocSystem>::create();
         const auto linkResult = ecs::Components<int>::link<BadAllocSystem>();
 
         WHEN("creating component")
