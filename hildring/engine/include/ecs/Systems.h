@@ -1,10 +1,6 @@
 #pragma once
 
-#include "util/Index.h"
-
-#include <assert.h>
 #include <memory>
-#include <vector>
 
 namespace ecs {
 template <typename System>
