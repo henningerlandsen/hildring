@@ -69,7 +69,7 @@ SCENARIO("Adding Systems")
             WHEN("attempting to create the same System again")
             {
                 LifetimeStatus status2{};
-                auto result2 = ecs::Systems<LifetimeTracker>::create(status2);
+                auto token2 = ecs::Systems<LifetimeTracker>::create(status2);
 
                 THEN("the Systems constructor is not called")
                 {
@@ -78,7 +78,7 @@ SCENARIO("Adding Systems")
 
                 THEN("the token is not valid")
                 {
-                    CHECK(false == result2);
+                    CHECK(false == token2);
                 }
             }
         }
