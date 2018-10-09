@@ -29,11 +29,6 @@ public:
     }
 
 private:
-    static System* getSystem()
-    {
-        return system.get();
-    }
-
     static bool valid()
     {
         return system != nullptr;
