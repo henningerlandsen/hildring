@@ -39,44 +39,44 @@ SCENARIO("Adding Systems")
         LifetimeStatus& status;
     };
 
-    GIVEN("a System is added")
+    GIVEN("a System is created")
     {
 
         LifetimeStatus status{};
         {
             auto token = ecs::Systems<LifetimeTracker>::create(status);
 
-            THEN("the System is created")
+            THEN("the Systems constructor is called")
             {
                 CHECK(status.isCtorCalled);
             }
 
-            THEN("result is true")
+            THEN("the token returned is valid")
             {
                 CHECK(token == true);
             }
 
-            THEN("the System persists")
+            THEN("the Systems destructor has not been called")
             {
                 CHECK(!status.isDtorCalled);
             }
 
-            THEN("the System is not copied")
+            THEN("the System has not been copied")
             {
                 CHECK(status.copyCount == 0);
             }
 
-            WHEN("the same System is added again")
+            WHEN("attempting to create the same System again")
             {
                 LifetimeStatus status2{};
                 auto result2 = ecs::Systems<LifetimeTracker>::create(status2);
 
-                THEN("the System is not created")
+                THEN("the Systems constructor is not called")
                 {
                     CHECK(false == status2.isCtorCalled);
                 }
 
-                THEN("result is false")
+                THEN("the token is not valid")
                 {
                     CHECK(false == result2);
                 }
@@ -88,6 +88,11 @@ SCENARIO("Adding Systems")
             THEN("the System is destroyed")
             {
                 CHECK(status.isDtorCalled);
+            }
+
+            THEN("the System can be created again")
+            {
+                CHECK(ecs::Systems<LifetimeTracker>::create(status) == true);
             }
         }
     }
@@ -117,7 +122,7 @@ SCENARIO("Adding Systems")
         }
     }
 
-    GIVEN("a system is added")
+    GIVEN("a System is created")
     {
         struct MySystem {
             MySystem() {}
