@@ -94,6 +94,14 @@ SCENARIO("Adding Systems")
             {
                 CHECK(ecs::Systems<LifetimeTracker>::create(status) == true);
             }
+
+            THEN("accessing the System fails")
+            {
+                auto result = ecs::Systems<LifetimeTracker>::with([](LifetimeTracker&) {
+                    CHECK(false);
+                });
+                CHECK(result == false);
+            }
         }
     }
 
