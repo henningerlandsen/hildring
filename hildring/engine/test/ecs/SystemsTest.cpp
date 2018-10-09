@@ -173,7 +173,7 @@ SCENARIO("Adding Systems")
             struct OtherSystem {
             };
 
-            auto token = ecs::Systems<OtherSystem>::create();
+            auto token2 = ecs::Systems<OtherSystem>::create();
             THEN("earlier systems can be retrieved")
             {
                 ecs::Systems<MySystem>::with([](MySystem& system) {
