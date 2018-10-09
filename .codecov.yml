@@ -1,2 +1,3 @@
 ignore:
     - "hildring/externals/.*"
+    - "hildring/engine/test/.*"
