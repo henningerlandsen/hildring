@@ -2,6 +2,7 @@
 
 #include "ecs/EntityId.h"
 #include "ecs/Systems.h"
+#include "util/LifetimeToken.h"
 
 namespace ecs {
 template <typename Component>
@@ -10,62 +11,36 @@ class Components {
     using DestroyFn = bool (*)(const ecs::EntityId);
 
 public:
-    class LinkLifetime {
-    public:
-        LinkLifetime(bool validLink)
-            : valid(validLink)
-        {
-        }
-
-        ~LinkLifetime()
-        {
-            if (valid) {
-                Components<Component>::unlink();
-            }
-        }
-
-        LinkLifetime(const LinkLifetime&) = delete;
-
-        LinkLifetime(LinkLifetime&& other)
-        {
-            this->valid = other.valid;
-            other.valid = false;
-        }
-
-        operator bool() const { return valid; }
-
-    private:
-        bool valid{ false };
-    };
-
     template <typename System>
-    static LinkLifetime link()
+    static util::LifetimeToken link()
     {
         if (!linked()) {
             createFn = [](const ecs::EntityId id, Component*& component) {
                 bool created = false;
-                ecs::Systems::with<System>([&created, id, &component](System& system) {
+                ecs::Systems<System>::with([&created, id, &component](System& system) {
                     created = system.create(id, component);
                 });
                 return created;
             };
             getFn = [](const ecs::EntityId id, Component*& component) {
                 bool found = false;
-                ecs::Systems::with<System>([&found, id, &component](System& system) {
+                ecs::Systems<System>::with([&found, id, &component](System& system) {
                     found = system.get(id, component);
                 });
                 return found;
             };
             destroyFn = [](const ecs::EntityId id) {
                 bool destroyed = false;
-                ecs::Systems::with<System>([&destroyed, id](System& system) {
+                ecs::Systems<System>::with([&destroyed, id](System& system) {
                     destroyed = system.destroy(id);
                 });
                 return destroyed;
             };
-            return true;
+            return util::LifetimeToken([]() {
+                Components<Component>::unlink();
+            });
         }
-        return false;
+        return util::LifetimeToken();
     }
 
     template <typename Callable>
