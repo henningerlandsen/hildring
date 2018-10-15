@@ -17,7 +17,6 @@ set(SOURCES
     source/Painter.cpp
     source/Window.cpp
 
-    source/ecs/Systems.cpp
     source/util/LifetimeToken.cpp
 )
 

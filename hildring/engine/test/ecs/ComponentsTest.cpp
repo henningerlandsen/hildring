@@ -91,7 +91,7 @@ SCENARIO("Registering components")
             {
                 const auto result = ecs::Components<Component>::with(
                     42,
-                    [](Component&) { assert(false); });
+                    [](Component&) { CHECK(false); });
                 THEN("accessing fails")
                 {
                     CHECK(result == false);
@@ -109,29 +109,29 @@ SCENARIO("Registering components")
 
             WHEN("System is created")
             {
-                ecs::Systems::create<System>();
+                auto token = ecs::Systems<System>::create();
 
                 THEN("Component can be created")
                 {
                     const auto createResult = ecs::Components<Component>::create(42);
                     CHECK(createResult);
                 }
-            }
 
-            WHEN("lifetime token is moved")
-            {
+                WHEN("lifetime token is moved")
                 {
-                    const auto linkResultCopy = std::move(linkResult);
-                    THEN("link still exists")
                     {
-                        CHECK(ecs::Components<Component>::create(42) == true);
+                        const auto linkResultCopy = std::move(linkResult);
+                        THEN("link still exists")
+                        {
+                            CHECK(ecs::Components<Component>::create(42) == true);
+                        }
                     }
-                }
-                WHEN("moved token is destroyed")
-                {
-                    THEN("link is broken")
+                    WHEN("moved token is destroyed")
                     {
-                        CHECK(ecs::Components<Component>::create(42) == false);
+                        THEN("link is broken")
+                        {
+                            CHECK(ecs::Components<Component>::create(42) == false);
+                        }
                     }
                 }
             }
@@ -140,7 +140,7 @@ SCENARIO("Registering components")
 
     GIVEN("System is created")
     {
-        ecs::Systems::create<System>();
+        auto token = ecs::Systems<System>::create();
 
         WHEN("linking a Component")
         {
@@ -161,7 +161,7 @@ SCENARIO("Registering components")
 
                 THEN("System creates it")
                 {
-                    ecs::Systems::with<System>([](System& system) {
+                    ecs::Systems<System>::with([](System& system) {
                         CHECK(system.createCalled);
                     });
                 }
@@ -181,7 +181,7 @@ SCENARIO("Registering components")
                     CHECK(ecs::Components<Component>::with(42, [](Component& c) {
                         c.name = "Dingo";
                     }));
-                    CHECK(ecs::Systems::with<System>([](System& s) {
+                    CHECK(ecs::Systems<System>::with([](System& s) {
                         CHECK(s.component.name == "Dingo");
                     }));
                 }
@@ -192,7 +192,7 @@ SCENARIO("Registering components")
 
                     THEN("Systems destroy is called")
                     {
-                        CHECK(ecs::Systems::with<System>([](System& s) {
+                        CHECK(ecs::Systems<System>::with([](System& s) {
                             CHECK(s.destroyCalled);
                         }));
                     }
@@ -223,7 +223,7 @@ SCENARIO("Registering components")
             bool destroy(const ecs::EntityId) { return false; }
         };
 
-        ecs::Systems::create<BadAllocSystem>();
+        auto token = ecs::Systems<BadAllocSystem>::create();
         const auto linkResult = ecs::Components<int>::link<BadAllocSystem>();
 
         WHEN("creating component")
