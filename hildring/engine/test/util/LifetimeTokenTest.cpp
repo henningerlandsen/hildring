@@ -2,6 +2,8 @@
 
 #include "util/LifetimeToken.h"
 
+#include <type_traits>
+
 SCENARIO("Destructor callback is invoked")
 {
     bool called = false;
@@ -71,6 +73,14 @@ SCENARIO("Destructor callback is invoked")
                 CHECK(called);
             }
         }
+
+        WHEN("moved assigned callback is invoked")
+        {
+            auto tokenB = util::LifetimeToken();
+            tokenA = std::move(tokenB);
+
+            CHECK(called);
+        }
     }
 }
 
@@ -108,6 +118,37 @@ SCENARIO("LifetimeToken is valid when it has a callback")
         THEN("token is invalid")
         {
             CHECK(!token);
+        }
+    }
+}
+
+SCENARIO("LifetimeToken can be used with standard containers")
+{
+    THEN("LifetimeToken is move constructible")
+    {
+        CHECK(std::is_move_constructible<util::LifetimeToken>::value);
+    }
+
+    THEN("LifetimeToken is move assignable")
+    {
+        CHECK(std::is_move_constructible<util::LifetimeToken>::value);
+    }
+
+    GIVEN("A vector of tokens")
+    {
+        std::vector<util::LifetimeToken> tokens;
+        auto counter = 0;
+        WHEN("A series of tokens are added to the vector")
+        {
+
+            tokens.emplace_back([&counter]() { CHECK(counter++ == 2); });
+            tokens.emplace_back([&counter]() { CHECK(counter++ == 1); });
+            tokens.emplace_back([&counter]() { CHECK(counter++ == 0); });
+
+            THEN("it they are destroyed in reverse order")
+            {
+                tokens.clear();
+            }
         }
     }
 }
