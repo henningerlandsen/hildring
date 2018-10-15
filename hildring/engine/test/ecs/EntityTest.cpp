@@ -74,8 +74,8 @@ SCENARIO("Entities have components")
     GIVEN("an Entity and a Component linked to a System")
     {
         auto entity = ecs::Entity();
-        ecs::Systems::create<System>();
-        ecs::Systems::with<System>([entity](System& s) {
+        auto token = ecs::Systems<System>::create();
+        ecs::Systems<System>::with([entity](System& s) {
             s.expectedId = entity.id();
         });
         auto link = ecs::Components<int>::link<System>();
@@ -93,14 +93,14 @@ SCENARIO("Entities have components")
 
             THEN("System creates the Component")
             {
-                CHECK(ecs::Systems::with<System>([](System& s) {
+                CHECK(ecs::Systems<System>::with([](System& s) {
                     CHECK(s.createCalled);
                 }));
             }
 
             THEN("Components value is updated")
             {
-                CHECK(ecs::Systems::with<System>([](System& s) {
+                CHECK(ecs::Systems<System>::with([](System& s) {
                     CHECK(s.value == 9);
                 }));
             }
@@ -108,7 +108,7 @@ SCENARIO("Entities have components")
             THEN("Component can be accessed")
             {
                 CHECK(entity.with<int>([](int&) {}));
-                CHECK(ecs::Systems::with<System>([](System& s) {
+                CHECK(ecs::Systems<System>::with([](System& s) {
                     CHECK(s.getCalled);
                 }));
             }
@@ -116,7 +116,7 @@ SCENARIO("Entities have components")
             THEN("Component can be removed")
             {
                 CHECK(entity.destroy<int>());
-                CHECK(ecs::Systems::with<System>([](System& s) {
+                CHECK(ecs::Systems<System>::with([](System& s) {
                     CHECK(s.destroyCalled);
                 }));
             }
