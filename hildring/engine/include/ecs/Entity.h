@@ -31,6 +31,7 @@ public:
 
 private:
     EntityId _id;
+    //    std::vector<util::LifetimeToken> tokens;
 };
 
 template <typename Component, typename Callable>

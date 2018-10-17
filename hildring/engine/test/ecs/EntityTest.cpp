@@ -169,5 +169,25 @@ SCENARIO("Entities have components")
                 }));
             }
         }
+
+        WHEN("an entity with a component goes out of scope")
+        {
+            {
+                auto scopedEntity = ecs::Entity();
+                const auto id = scopedEntity.id();
+                CHECK(ecs::Systems<System>::with([id](System& s) {
+                    s.expectedId = id;
+                }));
+
+                scopedEntity.add<int>([](int&) {});
+            }
+
+            THEN("the component is detroyed")
+            {
+                CHECK(ecs::Systems<System>::with([](System& s) {
+                    CHECK(s.destroyCalled);
+                }));
+            }
+        }
     }
 }
