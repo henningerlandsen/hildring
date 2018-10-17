@@ -15,4 +15,20 @@ Entity::Entity()
 }
 
 Entity::~Entity() {}
+
+Entity::Entity(Entity&& other)
+    : _id(std::move(other._id))
+//, tokens(std::move(other.tokens))
+{
+}
+
+Entity&
+Entity::operator=(Entity&& other)
+{
+    if (this != &other) {
+        //       _id = other._id;
+    }
+    return *this;
+}
+
 }

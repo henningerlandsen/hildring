@@ -26,14 +26,20 @@ SCENARIO("Create Entity")
         }
     }
 
-    WHEN("an Entity is copied")
+    WHEN("an Entity is moved")
     {
         auto e = ecs::Entity();
-        auto e2 = e;
+        const auto id = e.id();
+        auto e2 = std::move(e);
 
-        THEN("they have the same id")
+        THEN("then the id is moved")
         {
-            CHECK(e.id() == e2.id());
+            CHECK(e2.id() == id);
+        }
+
+        THEN("the moved from entity is invalid")
+        {
+            CHECK(e.id().valid() == false);
         }
     }
 }
@@ -74,9 +80,10 @@ SCENARIO("Entities have components")
     GIVEN("an Entity and a Component linked to a System")
     {
         auto entity = ecs::Entity();
+        const auto id = entity.id();
         auto token = ecs::Systems<System>::create();
-        ecs::Systems<System>::with([entity](System& s) {
-            s.expectedId = entity.id();
+        ecs::Systems<System>::with([id](System& s) {
+            s.expectedId = id;
         });
         auto link = ecs::Components<int>::link<System>();
 
@@ -116,6 +123,26 @@ SCENARIO("Entities have components")
             THEN("Component can be removed")
             {
                 CHECK(entity.destroy<int>());
+                CHECK(ecs::Systems<System>::with([](System& s) {
+                    CHECK(s.destroyCalled);
+                }));
+            }
+        }
+
+        WHEN("an entity with a component goes out of scope")
+        {
+            {
+                auto scopedEntity = ecs::Entity();
+                const auto id = scopedEntity.id();
+                CHECK(ecs::Systems<System>::with([id](System& s) {
+                    s.expectedId = id;
+                }));
+
+                scopedEntity.add<int>([](int&) {});
+            }
+
+            THEN("the component is detroyed")
+            {
                 CHECK(ecs::Systems<System>::with([](System& s) {
                     CHECK(s.destroyCalled);
                 }));

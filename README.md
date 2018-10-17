@@ -27,6 +27,8 @@ Playground for new ideas, techniques and tools in the form of an OpenGL renderni
 - [x] Testing framework
 - [ ] Engine architechture:
     - [ ] Entities
+        - [ ] can be moved, not copied.
+            - [ ] implement for support classes also.
         - [x] can be created
         - [ ] can be destroyed
             - [ ] attached Components are also destroyed. How is the lifetime of an entity defined?

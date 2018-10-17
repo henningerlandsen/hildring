@@ -2,12 +2,21 @@
 
 #include "ecs/Components.h"
 #include "ecs/EntityId.h"
+#include "util/LifetimeToken.h"
+
+#include <vector>
 
 namespace ecs {
 class Entity {
 public:
     Entity();
     ~Entity();
+
+    Entity(const Entity&) = delete;
+    Entity& operator=(const Entity&) = delete;
+
+    Entity(Entity&& other);
+    Entity& operator=(Entity&& other);
 
     EntityId id() const { return _id; }
 
@@ -22,6 +31,7 @@ public:
 
 private:
     const EntityId _id;
+    //    std::vector<util::LifetimeToken> tokens;
 };
 
 template <typename Component, typename Callable>
