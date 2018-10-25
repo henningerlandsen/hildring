@@ -17,16 +17,17 @@ Entity::Entity()
 Entity::~Entity() {}
 
 Entity::Entity(Entity&& other)
-    : _id(std::move(other._id))
-//, tokens(std::move(other.tokens))
+    : _id(other._id)
 {
+    other._id.invalidate();
 }
 
 Entity&
 Entity::operator=(Entity&& other)
 {
     if (this != &other) {
-        //       _id = other._id;
+        _id = other._id;
+        other._id.invalidate();
     }
     return *this;
 }

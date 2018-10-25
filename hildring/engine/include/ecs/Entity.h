@@ -30,8 +30,7 @@ public:
     bool destroy();
 
 private:
-    const EntityId _id;
-    //    std::vector<util::LifetimeToken> tokens;
+    EntityId _id;
 };
 
 template <typename Component, typename Callable>
