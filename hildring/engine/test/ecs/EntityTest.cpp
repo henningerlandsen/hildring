@@ -25,21 +25,62 @@ SCENARIO("Create Entity")
             CHECK(e1.id() != e2.id());
         }
     }
+}
 
-    WHEN("an Entity is moved")
+SCENARIO("Moving Entities")
+{
+    GIVEN("an Entity")
     {
         auto e = ecs::Entity();
-        const auto id = e.id();
-        auto e2 = std::move(e);
 
-        THEN("then the id is moved")
+        WHEN("an Entity is move constructed")
         {
-            CHECK(e2.id() == id);
+            const auto id = e.id();
+            auto e2 = std::move(e);
+
+            THEN("then the id is moved")
+            {
+                CHECK(e2.id() == id);
+            }
+
+            THEN("the moved from entity is invalid")
+            {
+                CHECK(e.id().valid() == false);
+            }
         }
 
-        THEN("the moved from entity is invalid")
+        WHEN("the Entity is move assigned to")
         {
-            CHECK(e.id().valid() == false);
+            auto e2 = ecs::Entity();
+            const auto newId = e2.id();
+            e = std::move(e2);
+
+            THEN("it gets the id from the other Entity")
+            {
+                CHECK(e.id() == newId);
+            }
+
+            THEN("the moved from Entity is invalidated")
+            {
+                CHECK(e2.id().valid() == false);
+            }
+        }
+
+        WHEN("the Entity is move assigned to itself")
+        {
+            const auto id = e.id();
+            ecs::Entity* ptrE = &e;
+            *ptrE = std::move(e);
+
+            THEN("it is not invlidated")
+            {
+                CHECK(e.id().valid());
+            }
+
+            THEN("it's id does not change")
+            {
+                CHECK(e.id() == id);
+            }
         }
     }
 }
