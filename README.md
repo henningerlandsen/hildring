@@ -27,15 +27,13 @@ Playground for new ideas, techniques and tools in the form of an OpenGL renderni
 - [x] Testing framework
 - [ ] Engine architechture:
     - [ ] Entities
-        - [ ] can be moved, not copied.
+        - [x] can be moved, not copied.
             - [ ] implement for support classes also.
         - [x] can be created
         - [ ] can be destroyed
-            - [ ] attached Components are also destroyed. How is the lifetime of an entity defined?
-                - Scope based? 
-                - Central location for Entities? Will need some kind of reference anyway. How is that different from Entity?
-                - Reference counted? Shared pointer handling destruction. Is there any reason for shared ownership?
-                - Collect lifetime tokens for compoents in Entity itself? What happens when a component is manually removed? Should not matter.. still tied to Entity id. Will try to delete nothing.
+            - [ ] attached Components are also destroyed.
+                - [ ] Use collection of lifetimes
+                - [x] Entities are tied to scope 
         - [x] can have Components
     - [x] Components
         - [x] belong to one system
