@@ -23,14 +23,19 @@ Playground for new ideas, techniques and tools in the form of an OpenGL renderni
             - [x] Mac os
         - [x] Disable for other platforms?
         - [x] Exclude externals dir
+    - [ ] Static analysis
 - [x] Setup clang-format
 - [x] Testing framework
 - [ ] Engine architechture:
     - [ ] Entities
-        - [ ] can be created
+        - [x] can be moved, not copied.
+            - [ ] implement for support classes also.
+        - [x] can be created
         - [ ] can be destroyed
-            - [ ] attached Components are also destroyed
-        - [ ] can have Components
+            - [ ] attached Components are also destroyed.
+            - [x] Entities are tied to scope 
+            - [ ] Entity id is freed?
+        - [x] can have Components
     - [x] Components
         - [x] belong to one system
         - [x] can be created 
@@ -45,7 +50,9 @@ Playground for new ideas, techniques and tools in the form of an OpenGL renderni
         - [ ] Input events
         - [ ] Entity events (destruction)
         - [ ] Update tick event
-
+        - [ ] Component changes
+- [ ] Modularization
+    - [ ] Move from [inc|src|test]/[package] structure to [package]/[inc|src|test]
 - [ ] GLContext wrapper
 - [ ] Capture input events
 - [ ] Add scripting framework
