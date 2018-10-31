@@ -10,24 +10,24 @@ namespace {
     }
 }
 Entity::Entity()
-    : _id(getNextId())
+    : id_(getNextId())
 {
 }
 
 Entity::~Entity() {}
 
 Entity::Entity(Entity&& other)
-    : _id(other._id)
+    : id_(other.id_)
 {
-    other._id.invalidate();
+    other.id_.invalidate();
 }
 
 Entity&
 Entity::operator=(Entity&& other)
 {
     if (this != &other) {
-        _id = other._id;
-        other._id.invalidate();
+        id_ = other.id_;
+        other.id_.invalidate();
     }
     return *this;
 }
