@@ -1,7 +1,12 @@
 import os
 import ycm_core
 
-database = ycm_core.CompilationDatabase("")
+
+fallback_flags = [ '-x', 'c++', '-Wall', '-Wextra', '-Werror' ]
+
+
+current_path = os.path.dirname(os.path.realpath(__file__))
+database = ycm_core.CompilationDatabase(current_path)
 
 def MatchingSourceFile(filename):
     filename = filename.replace('/include/', '/source/')
@@ -13,11 +18,26 @@ def IsHeaderFile( filename ):
 
 def FlagsForFile( filename, **kwargs ):
     if IsHeaderFile(filename):
+        print(filename + " is a header")
         filename = MatchingSourceFile(filename)
+        print("Matching source file: " + filename)
+    filename = os.path.abspath(filename)
     compilation_info = database.GetCompilationInfoForFile( filename )
     if not compilation_info:
-        return None
+        print("File not found in compilation database: " + filename)
+        compilation_info = database.GetCompilationInfoForFile("demo/main.cpp")
+    flags = list(compilation_info.compiler_flags_)
+    if flags == []:
+        print("Using fallback flags")
+        flags = fallback_flags
     return {
-            'flags': list(compilation_info.compiler_flags_),
-        'include_paths_relative_to_dir': compilation_info.compiler_working_dir_
+            'flags': flags,        
+            'include_paths_relative_to_dir': compilation_info.compiler_working_dir_
     }
+
+def main():
+    print(FlagsForFile("hildring/engine/include/util/LifetimeTokenStack.h"))
+
+
+if __name__ == '__main__':
+    main();
