@@ -20,7 +20,7 @@ public:
     template <typename Arg>
     void push(Arg&& arg)
     {
-        push(LifetimeToken(std::forward<Arg>(arg)));
+        stack.emplace_back(std::forward<Arg>(arg));
     }
 
     void push(LifetimeToken&& token);
