@@ -52,4 +52,17 @@ SCENARIO("It invokes tokens in the reverse order of creation")
             }
         }
     }
+
+    GIVEN("A vector of tokens")
+    {
+        bool one = false, two = false;
+        std::vector<util::LifetimeToken> tokens;
+        tokens.emplace_back([&one]() { one = true; });
+        tokens.emplace_back([&two]() { two = true; });
+
+        tokens.pop_back();
+
+        CHECK(two == true);
+        CHECK(one == false);
+    }
 }
