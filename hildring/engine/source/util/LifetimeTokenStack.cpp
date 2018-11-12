@@ -5,7 +5,7 @@ namespace util {
 LifetimeTokenStack::~LifetimeTokenStack()
 {
     while (!stack.empty()) {
-        stack.pop_back();
+        stack.erase(stack.end() - 1);
     }
 }
 
