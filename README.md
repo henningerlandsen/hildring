@@ -30,9 +30,11 @@ Playground for new ideas, techniques and tools in the form of an OpenGL renderni
     - [ ] Entities
         - [x] can be moved, not copied.
             - [ ] implement for support classes also.
+            - [ ] Look into if move ctor/assign can be defaulted
         - [x] can be created
         - [ ] can be destroyed
             - [ ] attached Components are also destroyed.
+                - [ ] Use LifetimeTokenStack
             - [x] Entities are tied to scope 
             - [ ] Entity id is freed?
         - [x] can have Components
