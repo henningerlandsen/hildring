@@ -3,8 +3,7 @@
 #include "ecs/Components.h"
 #include "ecs/EntityId.h"
 #include "util/LifetimeToken.h"
-
-#include <vector>
+#include "util/LifetimeTokenStack.h"
 
 namespace ecs {
 class Entity {
@@ -31,15 +30,14 @@ public:
 
 private:
     EntityId id_;
-    std::vector<util::LifetimeToken> tokens_;
+    util::LifetimeTokenStack tokens_;
 };
 
 template <typename Component, typename Callable>
 bool Entity::add(Callable&& callback)
 {
     if (Components<Component>::create(id_, callback)) {
-        EntityId id = id_;
-        tokens_.emplace_back([id]() {
+        tokens_.push([id = id_]() {
             Components<Component>::destroy(id);
         });
         return true;

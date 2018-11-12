@@ -174,9 +174,9 @@ SCENARIO("Entities have components")
         {
             {
                 auto scopedEntity = ecs::Entity();
-                const auto id = scopedEntity.id();
-                CHECK(ecs::Systems<System>::with([id](System& s) {
-                    s.expectedId = id;
+                const auto scopedEntityId = scopedEntity.id();
+                CHECK(ecs::Systems<System>::with([scopedEntityId](System& s) {
+                    s.expectedId = scopedEntityId;
                 }));
 
                 scopedEntity.add<int>([](int&) {});
