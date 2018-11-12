@@ -133,22 +133,4 @@ SCENARIO("LifetimeToken can be used with standard containers")
     {
         CHECK(std::is_move_constructible<util::LifetimeToken>::value);
     }
-
-    GIVEN("A vector of tokens")
-    {
-        std::vector<util::LifetimeToken> tokens;
-        auto counter = 0;
-        WHEN("A series of tokens are added to the vector")
-        {
-
-            tokens.emplace_back([&counter]() { CHECK(counter++ == 2); });
-            tokens.emplace_back([&counter]() { CHECK(counter++ == 1); });
-            tokens.emplace_back([&counter]() { CHECK(counter++ == 0); });
-
-            THEN("it they are destroyed in reverse order")
-            {
-                tokens.clear();
-            }
-        }
-    }
 }
