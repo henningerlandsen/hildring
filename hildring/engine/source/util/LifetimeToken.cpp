@@ -10,9 +10,7 @@ LifetimeToken::LifetimeToken() {}
 
 LifetimeToken::~LifetimeToken()
 {
-    if (callback) {
-        callback();
-    }
+    release();
 }
 
 LifetimeToken::LifetimeToken(LifetimeToken&& other)
@@ -25,11 +23,8 @@ LifetimeToken&
 LifetimeToken::operator=(LifetimeToken&& other)
 {
     if (this != &other) {
-        if (callback) {
-            callback();
-        }
-        callback = other.callback;
-        other.callback = nullptr;
+        release();
+        std::swap(callback, other.callback);
     }
     return *this;
 }
@@ -37,5 +32,13 @@ LifetimeToken::operator=(LifetimeToken&& other)
 LifetimeToken::operator bool() const
 {
     return callback != nullptr;
+}
+
+void LifetimeToken::release()
+{
+    if (callback) {
+        callback();
+        callback = nullptr;
+    }
 }
 }

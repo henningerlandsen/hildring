@@ -17,6 +17,8 @@ class [[nodiscard]] LifetimeToken {
 
         operator bool() const;
 
+        void release();
+
     private:
         std::function<void()> callback;
 };

@@ -4,9 +4,9 @@ namespace util {
 
 LifetimeTokenStack::~LifetimeTokenStack()
 {
-    while (!stack.empty()) {
-        stack.erase(stack.end() - 1);
-    }
+    std::for_each(stack.rbegin(), stack.rend(), [](LifetimeToken& token) {
+        token.release();
+    });
 }
 
 void LifetimeTokenStack::push(LifetimeToken&& token)

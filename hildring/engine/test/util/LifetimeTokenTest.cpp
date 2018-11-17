@@ -22,6 +22,16 @@ SCENARIO("Destructor callback is invoked")
                 CHECK(called);
             }
         }
+
+        WHEN("LifetimeToken is explicitly released")
+        {
+            tokenPtr->release();
+
+            THEN("callback is invoked")
+            {
+                CHECK(called);
+            }
+        }
     }
 
     GIVEN("a method that returns a token")
