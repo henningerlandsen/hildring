@@ -1,5 +1,7 @@
 #include "util/LifetimeTokenStack.h"
 
+#include <algorithm>
+
 namespace util {
 
 LifetimeTokenStack::~LifetimeTokenStack()
