@@ -9,7 +9,6 @@ namespace util {
 class LifetimeTokenStack {
 public:
     LifetimeTokenStack() = default;
-    ~LifetimeTokenStack();
 
     LifetimeTokenStack(const LifetimeTokenStack&) = delete;
     LifetimeTokenStack& operator=(const LifetimeTokenStack&) = delete;
