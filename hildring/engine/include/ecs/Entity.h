@@ -3,8 +3,7 @@
 #include "ecs/Components.h"
 #include "ecs/EntityId.h"
 #include "util/LifetimeToken.h"
-
-#include <vector>
+#include "util/LifetimeTokenStack.h"
 
 namespace ecs {
 class Entity {
@@ -18,7 +17,7 @@ public:
     Entity(Entity&& other);
     Entity& operator=(Entity&& other);
 
-    EntityId id() const { return _id; }
+    EntityId id() const { return id_; }
 
     template <typename Component, typename Callable>
     bool add(Callable&& callback);
@@ -30,24 +29,31 @@ public:
     bool destroy();
 
 private:
-    EntityId _id;
+    EntityId id_;
+    util::LifetimeTokenStack tokens_;
 };
 
 template <typename Component, typename Callable>
 bool Entity::add(Callable&& callback)
 {
-    return Components<Component>::create(_id, callback);
+    if (Components<Component>::create(id_, callback)) {
+        tokens_.push([id = id_]() {
+            Components<Component>::destroy(id);
+        });
+        return true;
+    }
+    return false;
 }
 
 template <typename Component, typename Callable>
 bool Entity::with(Callable&& callback)
 {
-    return Components<Component>::with(_id, callback);
+    return Components<Component>::with(id_, callback);
 }
 
 template <typename Component>
 bool Entity::destroy()
 {
-    return Components<Component>::destroy(_id);
+    return Components<Component>::destroy(id_);
 }
 }

@@ -169,5 +169,78 @@ SCENARIO("Entities have components")
                 }));
             }
         }
+
+        WHEN("an entity with a component goes out of scope")
+        {
+            {
+                auto scopedEntity = ecs::Entity();
+                const auto scopedEntityId = scopedEntity.id();
+                CHECK(ecs::Systems<System>::with([scopedEntityId](System& s) {
+                    s.expectedId = scopedEntityId;
+                }));
+
+                scopedEntity.add<int>([](int&) {});
+            }
+
+            THEN("the component is detroyed")
+            {
+                CHECK(ecs::Systems<System>::with([](System& s) {
+                    CHECK(s.destroyCalled);
+                }));
+            }
+        }
+    }
+}
+
+SCENARIO("Systems can refuse to comply")
+{
+    GIVEN("A System that does not want to add components for an entity")
+    {
+        struct System {
+            bool create(const ecs::EntityId, int*&)
+            {
+                return false;
+            }
+
+            bool destroy(const ecs::EntityId)
+            {
+                return false;
+            }
+
+            bool get(const ecs::EntityId, int*&)
+            {
+                return false;
+            }
+        };
+
+        auto system_token = ecs::Systems<System>::create();
+        auto link_token = ecs::Components<int>::link<System>();
+        auto entity = ecs::Entity{};
+
+        WHEN("Attempting to create a component")
+        {
+            THEN("It returns false")
+            {
+                CHECK_FALSE(entity.add<int>([](int&) {}));
+            }
+
+            THEN("It does not invoke lambda")
+            {
+                entity.add<int>([](int&) { FAIL(); });
+            }
+        }
+
+        WHEN("Attempting to modify a component")
+        {
+            THEN("It returns false")
+            {
+                CHECK_FALSE(entity.with<int>([](int&) {}));
+            }
+
+            THEN("Id does not invoke lambda")
+            {
+                entity.with<int>([](int&) { FAIL(); });
+            }
+        }
     }
 }

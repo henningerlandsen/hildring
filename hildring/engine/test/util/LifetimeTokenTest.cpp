@@ -2,6 +2,8 @@
 
 #include "util/LifetimeToken.h"
 
+#include <type_traits>
+
 SCENARIO("Destructor callback is invoked")
 {
     bool called = false;
@@ -15,6 +17,16 @@ SCENARIO("Destructor callback is invoked")
         WHEN("LifetimeToken expires")
         {
             tokenPtr.reset();
+            THEN("callback is invoked")
+            {
+                CHECK(called);
+            }
+        }
+
+        WHEN("LifetimeToken is explicitly released")
+        {
+            tokenPtr->release();
+
             THEN("callback is invoked")
             {
                 CHECK(called);
@@ -71,6 +83,14 @@ SCENARIO("Destructor callback is invoked")
                 CHECK(called);
             }
         }
+
+        WHEN("moved assigned callback is invoked")
+        {
+            auto tokenB = util::LifetimeToken();
+            tokenA = std::move(tokenB);
+
+            CHECK(called);
+        }
     }
 }
 
@@ -109,5 +129,18 @@ SCENARIO("LifetimeToken is valid when it has a callback")
         {
             CHECK(!token);
         }
+    }
+}
+
+SCENARIO("LifetimeToken can be used with standard containers")
+{
+    THEN("LifetimeToken is move constructible")
+    {
+        CHECK(std::is_move_constructible<util::LifetimeToken>::value);
+    }
+
+    THEN("LifetimeToken is move assignable")
+    {
+        CHECK(std::is_move_constructible<util::LifetimeToken>::value);
     }
 }
