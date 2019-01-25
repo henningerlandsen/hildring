@@ -29,12 +29,11 @@ Playground for new ideas, techniques and tools in the form of an OpenGL renderni
 - [ ] Engine architechture:
     - [ ] Entities
         - [x] can be moved, not copied.
-            - [ ] implement for support classes also.
-            - [ ] Look into if move ctor/assign can be defaulted
+            - [x] implement for support classes also.
+            - [x] Look into if move ctor/assign can be defaulted
         - [x] can be created
-        - [ ] can be destroyed
-            - [ ] attached Components are also destroyed.
-                - [ ] Use LifetimeTokenStack
+        - [x] can be destroyed
+            - [x] attached Components are also destroyed.
             - [x] Entities are tied to scope 
             - [ ] Entity id is freed?
         - [x] can have Components
