@@ -29,8 +29,8 @@ Playground for new ideas, techniques and tools in the form of an OpenGL renderni
 - [ ] Engine architechture:
     - [ ] Entities
         - [x] can be moved, not copied.
-            - [ ] implement for support classes also.
-            - [ ] Look into if move ctor/assign can be defaulted
+            - [x] implement for support classes also.
+            - [x] Look into if move ctor/assign can be defaulted
         - [x] can be created
         - [ ] can be destroyed
             - [ ] attached Components are also destroyed.
@@ -49,10 +49,18 @@ Playground for new ideas, techniques and tools in the form of an OpenGL renderni
         - [x] Constant lookup
         - [x] Use lambda instead of returning pointer
     - [ ] Event subscription
-        - [ ] Input events
-        - [ ] Entity events (destruction)
-        - [ ] Update tick event
-        - [ ] Component changes
+        - [ ] Event types
+            - [ ] Input events
+            - [ ] Entity events (destruction)
+            - [ ] Update tick event
+            - [ ] Component changes
+        - [ ] Subscription:
+            - Static templates? Everything global, flexible, "a shared reference is as good as a global." so why not? Using tokens for lifetime
+            - How to do event data? 
+            - auto token = Events::subscribe<ComponentLifecycleEvent<T>>(this);
+            - auto token = Evnets::subscribe<ComponentLifecycleEvent<T>>([](){})
+            - Event subscription is a polymorphic object overridden by a template class specialized for storing either a static or instance function pointer or a lambda type object.
+            - Or: Instance member method only? Store void* instance and ptr to static template method that is created with instance type and method to call.
 - [ ] Modularization
     - [ ] Move from [inc|src|test]/[package] structure to [package]/[inc|src|test]
 - [ ] GLContext wrapper
