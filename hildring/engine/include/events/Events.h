@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <vector>
 
 namespace Events {
@@ -30,6 +31,15 @@ namespace detail {
             }
         }
 
+        static void removeListener(void* instance)
+        {
+            listeners.erase(
+                std::remove_if(begin(listeners), end(listeners), [instance](const Entry& e) {
+                    return e.instance == instance;
+                }),
+                end(listeners));
+        }
+
     private:
         struct Entry {
             using Fn = void (*)(void*, const EventType&);
@@ -54,5 +64,11 @@ template <class EventType>
 void dispatch(const EventType& eventData)
 {
     detail::EventRegistry<EventType>::dispatch(eventData);
+}
+
+template <class EventType, class Object>
+void unsubscribe(const Object& instance)
+{
+    detail::EventRegistry<EventType>::removeListener(instance);
 }
 }

@@ -44,5 +44,20 @@ SCENARIO("An object subscribes to an event")
                 CHECK(object.data == 33);
             }
         }
+
+        WHEN("Object unsubscribes")
+        {
+            Events::unsubscribe<int>(&object);
+
+            WHEN("The event is dispatched")
+            {
+                Events::dispatch(25);
+
+                THEN("Subcsribed method is not called")
+                {
+                    CHECK_FALSE(object.isCalled);
+                }
+            }
+        }
     }
 }
