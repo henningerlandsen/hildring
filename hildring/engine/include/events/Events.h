@@ -51,12 +51,6 @@ void subscribe(Object* instance)
 }
 
 template <class EventType>
-void dispatch(EventType&& eventData)
-{
-    detail::EventRegistry<EventType>::dispatch(eventData);
-}
-
-template <class EventType>
 void dispatch(const EventType& eventData)
 {
     detail::EventRegistry<EventType>::dispatch(eventData);

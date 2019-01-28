@@ -21,7 +21,7 @@ SCENARIO("An object subscribes to an event")
         WHEN("The event is fired")
         {
             auto eventData = 42;
-            Events::dispatch<int>(eventData);
+            Events::dispatch(eventData);
 
             THEN("Subscribed method is called")
             {
@@ -31,6 +31,17 @@ SCENARIO("An object subscribes to an event")
             THEN("Event data is passed")
             {
                 CHECK(object.data == 42);
+            }
+        }
+
+        WHEN("Event is dispatched using r-value")
+        {
+            Events::dispatch(33);
+
+            THEN("Subscribed method is called")
+            {
+                CHECK(object.isCalled);
+                CHECK(object.data == 33);
             }
         }
     }
