@@ -37,6 +37,7 @@ Playground for new ideas, techniques and tools in the form of an OpenGL renderni
             - [x] Entities are tied to scope 
             - [ ] Entity id is freed?
         - [x] can have Components
+        - [ ] make stack based lifetime opt-in, not enforced
     - [x] Components
         - [x] belong to one system
         - [x] can be created 
