@@ -14,14 +14,20 @@ namespace detail {
             (static_cast<Object*>(instance)->*Method)(eventData);
         }
 
+        static bool contains(void* instance)
+        {
+            return std::find_if(begin(listeners), end(listeners), [instance](const Entry& e) {
+                return e.instance == instance;
+            }) != listeners.end();
+        }
+
     public:
         template <class Object, void (Object::*Method)(const EventType&)>
         static void addListener(Object* instance)
         {
-            Entry e;
-            e.instance = instance;
-            e.function = &invoke<Object, Method>;
-            listeners.push_back(e);
+            if (!contains(instance)) {
+                listeners.emplace_back(instance, &invoke<Object, Method>);
+            }
         }
 
         static void dispatch(const EventType& eventData)
@@ -43,6 +49,13 @@ namespace detail {
     private:
         struct Entry {
             using Fn = void (*)(void*, const EventType&);
+
+            Entry(void* instance, Fn function)
+                : instance(instance)
+                , function(function)
+            {
+            }
+
             void* instance;
             Fn function;
         };

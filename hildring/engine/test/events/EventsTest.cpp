@@ -9,9 +9,11 @@ SCENARIO("An object subscribes to an event")
         {
             isCalled = true;
             data = eventData;
+            callCount++;
         }
         bool isCalled = false;
         int data = 0;
+        int callCount = 0;
     } object;
 
     GIVEN("An object with a subscription")
@@ -56,6 +58,21 @@ SCENARIO("An object subscribes to an event")
                 THEN("Subcsribed method is not called")
                 {
                     CHECK_FALSE(object.isCalled);
+                }
+            }
+        }
+
+        WHEN("Object subscribes twice")
+        {
+            Events::subscribe<int>(&object);
+
+            WHEN("Event is dispatched")
+            {
+                Events::dispatch(-1);
+
+                THEN("Object is only called once")
+                {
+                    CHECK(object.callCount == 1);
                 }
             }
         }
