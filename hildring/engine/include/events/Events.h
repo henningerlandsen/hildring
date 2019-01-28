@@ -16,9 +16,7 @@ namespace detail {
 
         static bool contains(void* instance)
         {
-            return std::find_if(begin(listeners), end(listeners), [instance](const Entry& e) {
-                return e.instance == instance;
-            }) != listeners.end();
+            return std::find_if(begin(listeners), end(listeners), EntryContains(instance)) != listeners.end();
         }
 
     public:
@@ -40,9 +38,7 @@ namespace detail {
         static void removeListener(void* instance)
         {
             listeners.erase(
-                std::remove_if(begin(listeners), end(listeners), [instance](const Entry& e) {
-                    return e.instance == instance;
-                }),
+                std::remove_if(begin(listeners), end(listeners), EntryContains(instance)),
                 end(listeners));
         }
 
@@ -58,6 +54,20 @@ namespace detail {
 
             void* instance;
             Fn function;
+        };
+
+        struct EntryContains {
+            EntryContains(void* instance)
+                : instance(instance)
+            {
+            }
+
+            bool operator()(const Entry& e)
+            {
+                return e.instance == instance;
+            }
+
+            void* instance;
         };
 
         static std::vector<Entry> listeners;
