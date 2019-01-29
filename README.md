@@ -58,7 +58,7 @@ Playground for new ideas, techniques and tools in the form of an OpenGL renderni
             - [x] Instance member method
             - [ ] Free method
             - [ ] Lambdas
-            - [ ] Unsubscribe
+            - [x] Unsubscribe
             - [ ] Subscription token
 - [ ] Modularization
     - [ ] Move from [inc|src|test]/[package] structure to [package]/[inc|src|test]
