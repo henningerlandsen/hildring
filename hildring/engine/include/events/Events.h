@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <vector>
 
-namespace Events {
+namespace events {
 namespace detail {
     template <class EventType>
     class EventRegistry {

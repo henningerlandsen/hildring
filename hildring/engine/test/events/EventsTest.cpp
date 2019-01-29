@@ -18,12 +18,12 @@ SCENARIO("An object subscribes to an event")
 
     GIVEN("An object with a subscription")
     {
-        Events::subscribe<int>(&object);
+        events::subscribe<int>(&object);
 
         WHEN("The event is fired")
         {
             auto eventData = 42;
-            Events::dispatch(eventData);
+            events::dispatch(eventData);
 
             THEN("Subscribed method is called")
             {
@@ -38,7 +38,7 @@ SCENARIO("An object subscribes to an event")
 
         WHEN("Event is dispatched using r-value")
         {
-            Events::dispatch(33);
+            events::dispatch(33);
 
             THEN("Subscribed method is called")
             {
@@ -49,11 +49,11 @@ SCENARIO("An object subscribes to an event")
 
         WHEN("Object unsubscribes")
         {
-            Events::unsubscribe<int>(&object);
+            events::unsubscribe<int>(&object);
 
             WHEN("The event is dispatched")
             {
-                Events::dispatch(25);
+                events::dispatch(25);
 
                 THEN("Subcsribed method is not called")
                 {
@@ -64,11 +64,11 @@ SCENARIO("An object subscribes to an event")
 
         WHEN("Object subscribes twice")
         {
-            Events::subscribe<int>(&object);
+            events::subscribe<int>(&object);
 
             WHEN("Event is dispatched")
             {
-                Events::dispatch(-1);
+                events::dispatch(-1);
 
                 THEN("Object is only called once")
                 {
