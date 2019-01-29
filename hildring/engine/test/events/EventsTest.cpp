@@ -78,3 +78,32 @@ SCENARIO("An object subscribes to an event")
         }
     }
 }
+
+SCENARIO("An event subscription is bound to scope")
+{
+    GIVEN("A class that subscibes to an event")
+    {
+        struct Listener {
+            Listener()
+            {
+                eventToken = events::subscription<int>(this);
+            }
+
+            void event(const int&) { FAIL(); }
+
+            util::LifetimeToken eventToken;
+        };
+
+        WHEN("Instance is created and destroyed")
+        {
+            {
+                auto l = Listener{};
+            }
+
+            THEN("Triggering event does not crash")
+            {
+                REQUIRE_NOTHROW(events::dispatch(100));
+            }
+        }
+    }
+}

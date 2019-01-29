@@ -56,8 +56,8 @@ Playground for new ideas, techniques and tools in the form of an OpenGL renderni
             - [ ] Component changes
         - [ ] Subscription:
             - [x] Instance member method
-            - [ ] Free method
-            - [ ] Lambdas
+            - [ ] Free method: Needed?
+            - [ ] Lambdas: Needed?
             - [x] Unsubscribe
             - [ ] Subscription token
 - [ ] Modularization

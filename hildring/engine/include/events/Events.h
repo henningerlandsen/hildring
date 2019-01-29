@@ -1,5 +1,7 @@
 #pragma once
 
+#include "util/LifetimeToken.h"
+
 #include <algorithm>
 #include <vector>
 
@@ -83,15 +85,23 @@ void subscribe(Object* instance)
     detail::EventRegistry<EventType>::template addListener<Object, Method>(instance);
 }
 
+template <class EventType, class Object>
+void unsubscribe(const Object& instance)
+{
+    detail::EventRegistry<EventType>::removeListener(instance);
+}
+
+template <class EventType, class Object, void (Object::*Method)(const EventType&) = &Object::event>
+util::LifetimeToken subscription(Object* instance)
+{
+    subscribe<EventType, Object, Method>(instance);
+    return { [instance]() { unsubscribe<EventType>(instance); } };
+}
+
 template <class EventType>
 void dispatch(const EventType& eventData)
 {
     detail::EventRegistry<EventType>::dispatch(eventData);
 }
 
-template <class EventType, class Object>
-void unsubscribe(const Object& instance)
-{
-    detail::EventRegistry<EventType>::removeListener(instance);
-}
 }
