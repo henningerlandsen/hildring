@@ -47,6 +47,7 @@ set(TEST_SOURCES
     test/ecs/ComponentsTest.cpp
     test/ecs/EntityTest.cpp
     test/ecs/SystemsTest.cpp
+    test/events/EventsTest.cpp
     test/util/IndexTest.cpp
     test/util/LifetimeTokenTest.cpp
     test/util/LifetimeTokenStackTest.cpp

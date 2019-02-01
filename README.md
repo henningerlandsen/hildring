@@ -37,6 +37,7 @@ Playground for new ideas, techniques and tools in the form of an OpenGL renderni
             - [x] Entities are tied to scope 
             - [ ] Entity id is freed?
         - [x] can have Components
+        - [ ] make stack based lifetime opt-in, not enforced
     - [x] Components
         - [x] belong to one system
         - [x] can be created 
@@ -48,10 +49,17 @@ Playground for new ideas, techniques and tools in the form of an OpenGL renderni
         - [x] Constant lookup
         - [x] Use lambda instead of returning pointer
     - [ ] Event subscription
-        - [ ] Input events
-        - [ ] Entity events (destruction)
-        - [ ] Update tick event
-        - [ ] Component changes
+        - [ ] Event types
+            - [ ] Input events
+            - [ ] Entity events (destruction)
+            - [ ] Update tick event
+            - [ ] Component changes
+        - [ ] Subscription:
+            - [x] Instance member method
+            - [ ] Free method: Needed?
+            - [ ] Lambdas: Needed?
+            - [x] Unsubscribe
+            - [x] Subscription token
 - [ ] Modularization
     - [ ] Move from [inc|src|test]/[package] structure to [package]/[inc|src|test]
 - [ ] GLContext wrapper
