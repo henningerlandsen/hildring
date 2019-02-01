@@ -1,4 +1,5 @@
 #include "ecs/Entity.h"
+#include "events/Events.h"
 
 namespace ecs {
 namespace {
@@ -14,7 +15,10 @@ Entity::Entity()
 {
 }
 
-Entity::~Entity() {}
+Entity::~Entity()
+{
+    events::dispatch(OnDestroy{ id_ });
+}
 
 Entity::Entity(Entity&& other)
     : id_(other.id_)
