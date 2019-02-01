@@ -37,7 +37,7 @@ namespace detail {
             }
         }
 
-        static void removeListener(void* instance)
+        static void removeListener(const void* instance)
         {
             listeners.erase(
                 std::remove_if(begin(listeners), end(listeners), EntryContains(instance)),
@@ -59,17 +59,17 @@ namespace detail {
         };
 
         struct EntryContains {
-            EntryContains(void* instance)
+            EntryContains(const void* instance)
                 : instance(instance)
             {
             }
 
-            bool operator()(const Entry& e)
+            bool operator()(const Entry& e) const
             {
                 return e.instance == instance;
             }
 
-            void* instance;
+            const void* instance;
         };
 
         static std::vector<Entry> listeners;
@@ -86,7 +86,7 @@ void subscribe(Object* instance)
 }
 
 template <class EventType, class Object>
-void unsubscribe(const Object& instance)
+void unsubscribe(const Object* instance)
 {
     detail::EventRegistry<EventType>::removeListener(instance);
 }
