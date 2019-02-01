@@ -16,7 +16,7 @@ namespace detail {
             (static_cast<Object*>(instance)->*Method)(eventData);
         }
 
-        static bool contains(void* instance)
+        static bool contains(const void* instance)
         {
             return std::find_if(begin(listeners), end(listeners), EntryContains(instance)) != listeners.end();
         }
