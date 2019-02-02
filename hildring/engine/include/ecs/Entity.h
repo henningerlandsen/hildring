@@ -8,6 +8,10 @@
 namespace ecs {
 class Entity {
 public:
+    struct OnDestroy {
+        EntityId id;
+    };
+
     Entity();
     ~Entity();
 

@@ -1,5 +1,6 @@
 #include "ecs/Entity.h"
 #include "ecs/Systems.h"
+#include "events/Events.h"
 
 #include "catch.hpp"
 
@@ -80,6 +81,47 @@ SCENARIO("Moving Entities")
             THEN("it's id does not change")
             {
                 CHECK(e.id() == id);
+            }
+        }
+    }
+}
+
+SCENARIO("Destorying entities")
+{
+    GIVEN("An entity destructor observer")
+    {
+        struct Observer {
+            Observer()
+            {
+                eventToken = events::subscription<ecs::Entity::OnDestroy>(this);
+            }
+
+            void event(const ecs::Entity::OnDestroy& event)
+            {
+                isCalled = true;
+                calledId = event.id;
+            }
+
+            bool isCalled = false;
+            ecs::EntityId calledId;
+            util::LifetimeToken eventToken;
+        } observer;
+
+        WHEN("An eventity is destroyed")
+        {
+            auto entity = ecs::Entity();
+            const auto id = entity.id();
+
+            entity.~Entity();
+
+            THEN("Observer was notified")
+            {
+                CHECK(observer.isCalled);
+            }
+
+            THEN("Observer was called with the expected id")
+            {
+                CHECK(observer.calledId == id);
             }
         }
     }
