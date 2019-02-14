@@ -3,7 +3,7 @@
 #include <chrono>
 #include <thread>
 
-#include "threads/Loop.h"
+#include "core/TickLoop.h"
 
 SCENARIO("Running a loop")
 {

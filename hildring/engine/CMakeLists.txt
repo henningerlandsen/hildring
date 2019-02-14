@@ -44,11 +44,11 @@ add_dependencies(${PROJECT_NAME} glfw)
 # Tests
 set(TEST_SOURCES
     test/main.cpp
+    test/core/TickLoopTest.cpp
     test/ecs/ComponentsTest.cpp
     test/ecs/EntityTest.cpp
     test/ecs/SystemsTest.cpp
     test/events/EventsTest.cpp
-    test/threads/LoopTest.cpp
     test/util/IndexTest.cpp
     test/util/LifetimeTokenTest.cpp
     test/util/LifetimeTokenStackTest.cpp
