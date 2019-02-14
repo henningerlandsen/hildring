@@ -3,12 +3,19 @@
 #include <chrono>
 #include <thread>
 
-namespace threads {
-class Loop {
-public:
-    Loop(std::chrono::milliseconds) {}
+namespace core {
 
-    std::thread::id threadId() const { return std::thread::id{}; }
+struct TickEvent {
+    std::chrono::milliseconds tickTime;
+};
+
+class TickLoop {
+public:
+    TickLoop(std::chrono::milliseconds) {}
+
+    void run() {}
+
+    void stop() {}
 
 private:
 };

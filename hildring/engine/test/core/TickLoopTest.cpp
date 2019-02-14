@@ -1,24 +1,37 @@
 #include "catch.hpp"
 
 #include <chrono>
-#include <thread>
+#include <future>
 
 #include "core/TickLoop.h"
+#include "events/Events.h"
 
 SCENARIO("Running a loop")
 {
-    WHEN("A loop is created")
+    GIVEN("A loop is created")
     {
-        auto loop = threads::Loop{ std::chrono::milliseconds(1) };
+        auto loop = core::TickLoop{ std::chrono::milliseconds(1) };
 
-        THEN("It's id is valid")
+        WHEN("Running the loop")
         {
-            CHECK(loop.threadId() != std::thread::id{});
-        }
+            loop.run();
 
-        THEN("It's id is different from the main thread")
-        {
-            CHECK(loop.threadId() != std::this_thread::get_id());
+            THEN("It emits tick events")
+            {
+                struct {
+                    void event(const core::TickEvent& event)
+                    {
+                        promise.set_value(event.tickTime);
+                    }
+                    std::promise<std::chrono::milliseconds> promise;
+                } tickListener;
+
+                auto token = events::subscription<core::TickEvent>(&tickListener);
+                auto future = tickListener.promise.get_future();
+                future.wait_for(std::chrono::microseconds(10));
+
+                CHECK(future.valid());
+            }
         }
     }
 }
