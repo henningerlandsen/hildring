@@ -2,7 +2,7 @@
 
 #include <chrono>
 
-#include "core/TickLoop.h"
+#include "core/MainLoop.h"
 #include "events/Events.h"
 
 SCENARIO("Running a loop")

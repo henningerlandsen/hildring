@@ -11,8 +11,8 @@ struct TickEvent {
 
 class MainLoop {
 public:
-    static int run(std::chrono::milliseconds) { return 1; }
+    static int run(std::chrono::milliseconds);
 
-    static void exit(int exitCode = 0){};
+    static void exit(int exitCode = 0);
 };
 }
