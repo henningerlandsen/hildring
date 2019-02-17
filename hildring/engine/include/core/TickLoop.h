@@ -9,14 +9,10 @@ struct TickEvent {
     std::chrono::milliseconds tickTime;
 };
 
-class TickLoop {
+class MainLoop {
 public:
-    TickLoop(std::chrono::milliseconds) {}
+    static int run(std::chrono::milliseconds) { return 1; }
 
-    void run() {}
-
-    void stop() {}
-
-private:
+    static void exit(int exitCode = 0){};
 };
 }
