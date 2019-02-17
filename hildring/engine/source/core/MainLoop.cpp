@@ -1,12 +1,24 @@
 #include "core/MainLoop.h"
 
+#include "events/Events.h"
+
 namespace core {
+
+int exitCode = -1;
+bool doExit = false;
+
 int MainLoop::run(std::chrono::milliseconds)
 {
-    return 1;
+    while (!doExit) {
+        events::dispatch(TickEvent{});
+    }
+
+    return exitCode;
 }
 
-void MainLoop::exit(int)
+void MainLoop::exit(int exitCode)
 {
+    core::exitCode = exitCode;
+    doExit = true;
 }
 }
