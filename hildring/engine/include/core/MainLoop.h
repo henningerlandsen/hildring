@@ -1,7 +1,6 @@
 #pragma once
 
 #include <chrono>
-#include <thread>
 
 namespace core {
 
@@ -11,7 +10,7 @@ struct TickEvent {
 
 class MainLoop {
 public:
-    static int run(std::chrono::milliseconds);
+    static int run(std::chrono::milliseconds tickTime, std::chrono::steady_clock::time_point (*timeFunction)() = &std::chrono::steady_clock::now);
 
     static void exit(int exitCode = 0);
 };
