@@ -7,20 +7,20 @@
 
 using namespace std::chrono_literals;
 
-std::chrono::steady_clock::time_point startTime{};
-std::chrono::steady_clock::duration increment{};
-unsigned int getTimeCallCount{ 0u };
+std::chrono::steady_clock::time_point currentTime{};
 
 std::chrono::steady_clock::time_point getTime()
 {
-    getTimeCallCount++;
-    return startTime += increment;
+    return currentTime;
+}
+
+void sleepUntil(const std::chrono::steady_clock::time_point& time)
+{
+    currentTime = time;
 }
 
 SCENARIO("Running a loop")
 {
-    getTimeCallCount = 0u;
-
     GIVEN("A tick event listener")
     {
         struct {
@@ -41,8 +41,7 @@ SCENARIO("Running a loop")
 
         WHEN("Running the main loop")
         {
-            increment = 2ms;
-            auto exitCode = core::MainLoop::run(16ms, &getTime);
+            auto exitCode = core::MainLoop::run(16ms, &getTime, &sleepUntil);
 
             THEN("It emits tick events")
             {
@@ -54,14 +53,14 @@ SCENARIO("Running a loop")
                 CHECK(exitCode == 0);
             }
 
-            THEN("It checks the time")
-            {
-                CHECK(getTimeCallCount != 0);
-            }
-
             THEN("It calls back at expected interval")
             {
                 CHECK(tickListener.eventData.tickTime == 16ms);
+            }
+
+            THEN("It sleeps until next update")
+            {
+                CHECK(std::chrono::duration_cast<std::chrono::milliseconds>(currentTime.time_since_epoch()) == 32ms);
             }
         }
     }
