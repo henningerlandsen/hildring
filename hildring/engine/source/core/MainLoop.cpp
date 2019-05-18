@@ -11,24 +11,24 @@ bool doExit = false;
 
 int MainLoop::run(
     std::chrono::milliseconds tickTime,
-    std::chrono::steady_clock::time_point (*timeFunction)(),
-    void (*sleepUntilFunction)(const std::chrono::steady_clock::time_point&))
+    std::chrono::steady_clock::time_point (*time)(),
+    void (*sleepUntil)(const std::chrono::steady_clock::time_point&))
 {
 
-    if (!sleepUntilFunction) {
-        sleepUntilFunction = &std::this_thread::sleep_until<std::chrono::steady_clock, std::chrono::steady_clock::duration>;
+    if (!sleepUntil) {
+        sleepUntil = &std::this_thread::sleep_until<std::chrono::steady_clock, std::chrono::steady_clock::duration>;
     }
-    auto lastUpdate = timeFunction();
-    auto nextUpdate = lastUpdate;
+    auto lastTick = time();
+    auto nextTick = lastTick;
     while (!doExit) {
-        const auto currentTime = timeFunction();
+        const auto currentTime = time();
         do {
-            nextUpdate += tickTime;
-        } while (nextUpdate < currentTime);
-        const auto deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(nextUpdate - lastUpdate);
-        lastUpdate = nextUpdate;
+            nextTick += tickTime;
+        } while (nextTick < currentTime);
+        const auto deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(nextTick - lastTick);
+        lastTick = nextTick;
         events::dispatch(TickEvent{ deltaTime });
-        sleepUntilFunction(nextUpdate);
+        sleepUntil(nextTick);
     }
 
     return exitCode;
