@@ -34,9 +34,9 @@ int MainLoop::run(
     return exitCode;
 }
 
-void MainLoop::exit(int exitCode)
+void MainLoop::exit(int withCode)
 {
-    core::exitCode = exitCode;
+    exitCode = withCode;
     doExit = true;
 }
 }
