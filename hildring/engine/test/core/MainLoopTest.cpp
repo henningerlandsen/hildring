@@ -5,6 +5,8 @@
 #include "core/MainLoop.h"
 #include "events/Events.h"
 
+#define DURATION_EQ(d1, d2) CHECK((d1).count() == (d2).count())
+
 using namespace std::chrono_literals;
 
 std::chrono::steady_clock::time_point currentTime{};
@@ -16,51 +18,97 @@ std::chrono::steady_clock::time_point getTime()
 
 void sleepUntil(const std::chrono::steady_clock::time_point& time)
 {
-    currentTime = time;
+    if (currentTime < time) {
+        currentTime = time;
+    }
 }
 
 SCENARIO("Running a loop")
 {
-    GIVEN("A tick event listener")
-    {
-        struct {
-            void event(const core::TickEvent& e)
-            {
-                if (!gotTick) {
-                    gotTick = true;
-                } else {
-                    core::MainLoop::exit(0);
-                }
-                eventData = e;
+    currentTime = std::chrono::steady_clock::time_point{};
+    struct {
+        void event(const core::TickEvent& e)
+        {
+            eventData = e;
+            currentTime += tickTime;
+            if (++tickCount == recordForTicks) {
+                core::MainLoop::exit(exitCode);
             }
-            bool gotTick{ false };
-            core::TickEvent eventData;
-        } tickListener;
+        }
 
-        auto token = events::subscription<core::TickEvent>(&tickListener);
+        unsigned int tickCount{ 0u };
+        unsigned int recordForTicks{ 1u };
+        int exitCode{ 0 };
+        std::chrono::steady_clock::duration tickTime{};
+        core::TickEvent eventData;
+    } tickHandler;
+
+    auto token = events::subscription<core::TickEvent>(&tickHandler);
+
+    GIVEN("One tick is recorded")
+    {
+        tickHandler.exitCode = 555;
 
         WHEN("Running the main loop")
         {
             auto exitCode = core::MainLoop::run(16ms, &getTime, &sleepUntil);
 
-            THEN("It emits tick events")
+            THEN("It records one tick event")
             {
-                CHECK(tickListener.gotTick);
+                CHECK(tickHandler.tickCount == 1);
             }
 
-            THEN("Run returns the exit code")
+            THEN("Run returns the expected code")
             {
-                CHECK(exitCode == 0);
+                CHECK(exitCode == 555);
             }
 
-            THEN("It calls back at expected interval")
+            THEN("The first tick is immideately")
             {
-                CHECK(tickListener.eventData.tickTime == 16ms);
+                DURATION_EQ(tickHandler.eventData.tickTime, 0ms);
+            }
+        }
+    }
+
+    GIVEN("Multiple ticks are recorded")
+    {
+        tickHandler.recordForTicks = 10u;
+
+        WHEN("Running the main loop")
+        {
+            auto exitCode = core::MainLoop::run(16ms, &getTime, &sleepUntil);
+
+            THEN("Expected number of ticks are recorded")
+            {
+                CHECK(tickHandler.tickCount == 10);
             }
 
-            THEN("It sleeps until next update")
+            THEN("Time has advanced when exiting")
             {
-                CHECK(std::chrono::duration_cast<std::chrono::milliseconds>(currentTime.time_since_epoch()) == 32ms);
+                const auto timeSinceStart = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime.time_since_epoch());
+                DURATION_EQ(timeSinceStart, 160ms);
+                }
+        }
+    }
+
+    GIVEN("Tick loop is stalled")
+    {
+        tickHandler.recordForTicks = 5u;
+        tickHandler.tickTime = 30ms;
+
+        WHEN("Running the main loop")
+        {
+            auto exitCode = core::MainLoop::run(10ms, &getTime, &sleepUntil);
+
+            THEN("Time has advanced as expected")
+            {
+                const auto timeSinceStart = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime.time_since_epoch());
+                DURATION_EQ(timeSinceStart, 150ms);
+            }
+
+            THEN("Delay is reflected in tick time")
+            {
+                DURATION_EQ(tickHandler.eventData.tickTime, 30ms);
             }
         }
     }

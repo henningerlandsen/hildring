@@ -14,21 +14,22 @@ int MainLoop::run(
     std::chrono::steady_clock::time_point (*time)(),
     void (*sleepUntil)(const std::chrono::steady_clock::time_point&))
 {
+    doExit = false;
 
     if (!sleepUntil) {
         sleepUntil = &std::this_thread::sleep_until<std::chrono::steady_clock, std::chrono::steady_clock::duration>;
     }
-    auto lastTick = time();
-    auto nextTick = lastTick;
+
+    auto timeToTick = time();
     while (!doExit) {
-        const auto currentTime = time();
-        do {
-            nextTick += tickTime;
-        } while (nextTick < currentTime);
-        const auto deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(nextTick - lastTick);
-        lastTick = nextTick;
+        const auto deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(time() - timeToTick);
+        if (deltaTime > tickTime)
+            timeToTick = time();
+        else {
+            timeToTick += tickTime;
+        }
         events::dispatch(TickEvent{ deltaTime });
-        sleepUntil(nextTick);
+        sleepUntil(timeToTick);
     }
 
     return exitCode;
