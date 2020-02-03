@@ -112,4 +112,22 @@ SCENARIO("Running a loop")
             }
         }
     }
+
+    GIVEN("MainLoop is using system clock")
+    {
+        WHEN("Running the main loop")
+        {
+            tickHandler.recordForTicks = 3;
+            const auto expectDoneTime = std::chrono::steady_clock::now() + 15ms;
+            const auto exitCode = core::MainLoop::run(5ms);
+            const auto actualDoneTime = std::chrono::steady_clock::now();
+
+            THEN("Expected time has passed")
+            {
+                const auto diffTime = std::chrono::duration_cast<std::chrono::milliseconds>(expectDoneTime - actualDoneTime);
+                const auto absDiff = abs(diffTime.count());
+                CHECK(absDiff < 3);
+            }
+        }
+    }
 }
