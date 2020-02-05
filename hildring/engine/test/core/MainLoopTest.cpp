@@ -124,9 +124,7 @@ SCENARIO("Running a loop")
 
             THEN("Expected time has passed")
             {
-                const auto diffTime = std::chrono::duration_cast<std::chrono::milliseconds>(expectDoneTime - actualDoneTime);
-                const auto absDiff = abs(diffTime.count());
-                CHECK(absDiff < 3);
+                CHECK(actualDoneTime >= expectDoneTime);
             }
         }
     }
