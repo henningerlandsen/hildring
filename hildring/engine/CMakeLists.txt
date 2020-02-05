@@ -17,6 +17,7 @@ set(SOURCES
     source/Painter.cpp
     source/Window.cpp
 
+    source/core/MainLoop.cpp
     source/ecs/Entity.cpp
     source/util/LifetimeToken.cpp
     source/util/LifetimeTokenStack.cpp
@@ -44,6 +45,7 @@ add_dependencies(${PROJECT_NAME} glfw)
 # Tests
 set(TEST_SOURCES
     test/main.cpp
+    test/core/MainLoopTest.cpp
     test/ecs/ComponentsTest.cpp
     test/ecs/EntityTest.cpp
     test/ecs/SystemsTest.cpp
