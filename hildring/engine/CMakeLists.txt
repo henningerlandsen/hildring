@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.8)
 
 project(hildring C CXX)
 
-set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/CMakeModules)
-
 find_package(OpenGL REQUIRED)
 
 include_directories(
