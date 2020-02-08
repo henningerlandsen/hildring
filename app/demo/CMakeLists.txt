@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.1)
 project(Demo C CXX)
 
 include_directories(
-    ../hildring/engine/include
+    ../../hildring/engine/include
 )
 
 add_compile_options(-std=c++14)

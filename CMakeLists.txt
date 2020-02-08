@@ -8,7 +8,7 @@ set(CXX_STANDARD_REQUIRED ON)
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
 add_subdirectory(hildring)
-add_subdirectory(demo)
+add_subdirectory(app/demo)
 
 # External dependencies
 add_subdirectory(ext/glfw)
