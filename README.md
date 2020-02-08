@@ -60,8 +60,21 @@ Playground for new ideas, techniques and tools in the form of an OpenGL renderni
             - [ ] Lambdas: Needed?
             - [x] Unsubscribe
             - [x] Subscription token
-- [ ] Modularization
-    - [ ] Move from [inc|src|test]/[package] structure to [package]/[inc|src|test]
+- [ ] Project structure:
+    - [ ] Modularization
+        - [ ] Move from [inc|src|test]/[package] structure to [package]/[inc|src|test]
+    - [ ] Out-of-source build
+    - [ ] Structure:
+        - <root>
+            - lib
+                - esc
+                    - inc
+                    - src
+                    - test
+                - ...
+            - app
+                - demo
+            - bin
 - [ ] GLContext wrapper
 - [ ] Capture input events
 - [ ] Add scripting framework
