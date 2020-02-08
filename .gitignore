@@ -42,6 +42,7 @@ cmake_install.cmake
 demo/Demo
 hildring/engine/hildring-tests
 coverage/
+bin/
 
 # Vim swap files
 *.swp

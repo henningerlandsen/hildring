@@ -8,7 +8,8 @@ find_package(OpenGL REQUIRED)
 
 include_directories(
     include
-    ../externals/glfw/include
+    ../../ext/glfw/include
+    ../../ext/catch2
     ${OPENGL_INCLUDE_DIRS}
 )
 
