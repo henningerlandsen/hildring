@@ -13,4 +13,4 @@ before_build:
 build_script:
 - cmake --build .
 test_script:
-- hildring\engine\Debug\hildring-tests.exe
+- ctest

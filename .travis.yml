@@ -33,7 +33,7 @@ matrix:
           - CMAKE_PARAMS="-DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=True"
       - os: osx
         env:
-          - TARGET="tests"
+          - TARGET="test"
           - CMAKE_PARAMS=""
 
 before_install:
