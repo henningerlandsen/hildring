@@ -6,7 +6,7 @@ fallback_flags = [ '-x', 'c++', '-Wall', '-Wextra', '-Werror' ]
 
 
 current_path = os.path.dirname(os.path.realpath(__file__))
-database = ycm_core.CompilationDatabase(current_path + '/bin')
+database = ycm_core.CompilationDatabase(current_path + '/build')
 
 def MatchingSourceFile(filename):
     filename = filename.replace('/include/', '/source/')
