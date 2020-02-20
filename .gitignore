@@ -44,6 +44,7 @@ demo/Demo
 hildring/engine/hildring-tests
 coverage/
 bin/
+build/
 
 # Vim swap files
 *.swp

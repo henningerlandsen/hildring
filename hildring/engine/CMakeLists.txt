@@ -7,7 +7,6 @@ find_package(OpenGL REQUIRED)
 include_directories(
     include
     ../../ext/glfw/include
-    ../../ext/catch2
     ${OPENGL_INCLUDE_DIRS}
 )
 
@@ -15,11 +14,6 @@ set(SOURCES
     source/Engine.cpp
     source/Painter.cpp
     source/Window.cpp
-
-    source/core/MainLoop.cpp
-    source/ecs/Entity.cpp
-    source/util/LifetimeToken.cpp
-    source/util/LifetimeTokenStack.cpp
 )
 
 if (MSVC)
@@ -41,27 +35,8 @@ target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} glfw)
 
 add_dependencies(${PROJECT_NAME} glfw)
 
-# Tests
-set(TEST_SOURCES
-    test/main.cpp
-    test/core/MainLoopTest.cpp
-    test/ecs/ComponentsTest.cpp
-    test/ecs/EntityTest.cpp
-    test/ecs/SystemsTest.cpp
-    test/events/EventsTest.cpp
-    test/util/IndexTest.cpp
-    test/util/LifetimeTokenTest.cpp
-    test/util/LifetimeTokenStackTest.cpp
-)
-
-set(TEST_EXECUTABLE ${PROJECT_NAME}-tests)
-
-add_executable(${TEST_EXECUTABLE} ${TEST_SOURCES})
-
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
-set_property(TARGET ${TEST_EXECUTABLE} PROPERTY CXX_STANDARD 17)
 
-target_include_directories(${TEST_EXECUTABLE} PRIVATE ../externals/catch2)
 
 target_link_libraries(${TEST_EXECUTABLE} ${PROJECT_NAME})
 
