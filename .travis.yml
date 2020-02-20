@@ -15,7 +15,7 @@ matrix:
                 - lcov
         env:
           - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
-          - TARGET="tests"
+          - TARGET="test"
           - CMAKE_PARAMS=""
       - os: linux
         addons:
