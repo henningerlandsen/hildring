@@ -61,10 +61,10 @@ Playground for new ideas, techniques and tools in the form of an OpenGL renderni
             - [x] Unsubscribe
             - [x] Subscription token
 - [ ] Project structure:
-    - [ ] Modularization
-        - [ ] Move from [inc|src|test]/[package] structure to [package]/[inc|src|test]
-    - [ ] Out-of-source build
-    - [ ] Structure:
+    - [x] Modularization
+        - [x] Move from [inc|src|test]/[package] structure to [package]/[inc|src|test]
+    - [x] Out-of-source build
+    - [x] Structure:
         - <root>
             - lib
                 - esc
@@ -75,6 +75,11 @@ Playground for new ideas, techniques and tools in the form of an OpenGL renderni
             - app
                 - demo
             - bin
+    - [ ] CMake macro for packages
+        - [ ] Proof of concept
+        - [ ] Rename add_package
+        - [ ] Support dynamic lib or object lib?
+    - [ ] Re-add coverage support
 - [ ] GLContext wrapper
 - [ ] Capture input events
 - [ ] Add scripting framework
