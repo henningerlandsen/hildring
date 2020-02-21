@@ -77,7 +77,7 @@ Playground for new ideas, techniques and tools in the form of an OpenGL renderni
             - bin
     - [ ] CMake macro for packages
         - [ ] Proof of concept
-        - [ ] Rename add_package
+        - [x] Rename add_package
         - [ ] Support dynamic lib or object lib?
     - [ ] Re-add coverage support
 - [ ] GLContext wrapper

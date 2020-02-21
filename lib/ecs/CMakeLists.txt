@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.8)
 
 include(package)
 
-package(NAME ecs
+add_package(NAME ecs
     SOURCES
     source/Entity.cpp
     TEST_SOURCES

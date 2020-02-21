@@ -1,5 +1,5 @@
 
-macro(package)
+macro(add_package)
     cmake_parse_arguments(PACKAGE "" "NAME" "SOURCES;TEST_SOURCES;DEPENDENCIES" ${ARGN})
 
     project(${PACKAGE_NAME} C CXX)
